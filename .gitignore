@@ -1,0 +1,85 @@
+#
+# javascript 
+#
+.DS_Store
+node_modules
+dist
+package.json
+package-lock.json
+#
+# local env files
+#
+.env.local
+.env.*.local
+#
+# Log files
+#
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+#
+# Editor directories and files
+#
+*~
+.cache
+.dir-locals.el
+# tags
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+TAGS
+#
+# documents
+#
+*/.asciidoctor
+main.adoc
+readme.adoc
+doc/html
+doc/doxygen_sqlite3.db
+doc/latex
+Doxyfile
+#
+# Intermediate file
+#
+*.i
+*.app
+*.moc
+*.obj
+*.o
+*.hex
+#
+# lib
+#
+*.so.*
+*.so
+*.a
+#
+# executable
+#
+a.out
+#
+# projects
+#
+version.h
+build/
+dist/
+public/
+debug/
+pg_data/
+sndb/
+exp/
+.ccls_root
+.ccls-cache
+compile_commands.json
+# ca, keys
+*.csr
+*.crt
+*.key
+*.pem
+#
+# docker
+#
+pg-data/
+go/
+.env
