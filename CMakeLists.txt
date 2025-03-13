@@ -33,7 +33,7 @@ CONFIGURE_FILE ("${FRCL_ROOT_DIRECTORY}/package.json.in" "${FRCL_ROOT_DIRECTORY}
 #
 ##
 #
-add_custom_target(
+add_custom_target(run
   COMMAND npm run dev
   WORKING_DIRECTORY ${FRCL_ROOT_DIRECTORY}
   COMMENT "Running developing environment..."
@@ -41,10 +41,18 @@ add_custom_target(
 #
 ##
 #
+add_custom_target(develop
+  COMMAND npm run dbuild
+  WORKING_DIRECTORY ${FRCL_ROOT_DIRECTORY}
+  COMMENT "Building development ..."
+)
+#
+##
+#
 add_custom_target(build
   COMMAND npm run build
   WORKING_DIRECTORY ${FRCL_ROOT_DIRECTORY}
-  COMMENT "Building ..."
+  COMMENT "Building production..."
 )
 #
 ##

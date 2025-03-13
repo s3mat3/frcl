@@ -4,8 +4,9 @@
     "version": "@FRCL_VERSION@",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
+        "dev": "vite --mode development",
+        "build": "vite build --mode production",
+        "dbuild": "vite build --mode development",
         "preview": "vite preview",
         "test": "vitest run --printConsoleTrace=true",
         "dtest": "vitest watch --printConsoleTrace=true"
