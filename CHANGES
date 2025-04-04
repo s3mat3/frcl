@@ -1,3 +1,7 @@
+Version 0.3.0:
+ - Add css and modal samples.
+ - Change method name attach to mount in Nel class.
+
 Version 0.2.1:
  - Fix #1 Reference only fires once.
 
