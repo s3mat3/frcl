@@ -3,6 +3,17 @@
     "private": true,
     "version": "@FRCL_VERSION@",
     "type": "module",
+    "main": "./dist/frcl.es.cjs",
+    "module": "./dist/index.js",
+    "author": "s3mat3",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/s3mat3/frcl"
+    },
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "dev": "vite --mode development",
         "build": "vite build --mode production",
@@ -14,6 +25,7 @@
     "devDependencies": {
         "jsdom": "^26.0.0",
         "material-symbols": "^0.29.2",
+        "sass": "^1.86.3",
         "vite": "^6.2.0",
         "vitest": "^3.0.7"
     }

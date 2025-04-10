@@ -22,6 +22,7 @@ project("${TARGET}"
 set(FRCL_ROOT_NAME ${TARGET})
 set(FRCL_ROOT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(FRCL_BUILD_DIRECTORY ${PROJECT_BINARY_DIR})
+set(FRCL_SCRIPTS_DIRECTORY ${FRCL_ROOT_DIRECTORY}/scripts)
 ## output directories
 set(FRCL_OUTPUT_ROOT ${FRCL_ROOT_DIRECTORY}/dist)
 #
@@ -30,6 +31,12 @@ option(FRCL_RUN_TEST "Test for client side" OFF)
 ## create package.json from package.json.in
 CONFIGURE_FILE ("${FRCL_ROOT_DIRECTORY}/package.json.in" "${FRCL_ROOT_DIRECTORY}/package.json")
 
+## install node_modules for building client side code
+add_custom_target(install-dep
+  COMMAND ${FRCL_SCRIPTS_DIRECTORY}/install-node.sh
+  WORKING_DIRECTORY ${FRCL_ROOT_DIRECTORY}
+  COMMENT "Installing js develop dependency"
+  )
 #
 ##
 #

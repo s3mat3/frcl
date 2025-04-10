@@ -1,0 +1,80 @@
+/**  For Fake Reactive Component oriented Library
+ * @file dialog.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "sass:color";
+@use "@styles/sass/global/vars" as *;
+@use "@styles/sass/global/mixins" as *;
+
+table {
+    max-width: 100%;
+    margin: auto;
+    margin-top: 0;
+    border: none;
+    border-spacing: 0;
+    caption {
+        display: table-caption;
+        height: $table-caption-height;
+        font-size: $font-size-medium;
+        font-weight: $base-weight-semibold;
+        text-align: center;
+        vertical-align: middle;
+        background: $accent-skyblue;
+        @include sticky(0, 0, 999);
+        border-top: none;
+    }
+    thead {
+        position: sticky;
+        @include sticky($table-caption-height, 0, 999);
+        border-top: none;
+        background-color: $achromatic-grey;
+    }
+    thead,tfoot{
+        border-bottom: 0.2rem solid $achromatic-grey;
+        tr {
+            td, th {
+                font-size: $font-size-medium;
+                font-weight: $base-weight-semibold;
+                vertical-align: middle;
+                padding: 0.2rem;
+            }
+        }
+    }
+    tbody {
+        tr {
+            border-bottom: 0.1rem solid $achromatic-grey;
+            &:nth-child(odd) {
+                background-color: $table-row-odd-color;
+            }
+            &:nth-child(even) {
+                background-color: $table-body-color;
+            }
+            &.selected {
+                background: $base-cream;
+            }
+            td, th {
+                font-size: $font-size-normal;
+                font-weight: $base-weight-medium;
+                vertical-align: middle;
+                padding: 0.2rem;
+            }
+        }
+
+    }
+}
+
+table.sortable {
+    thead {
+        tr {
+            th.sort-asc::after {
+                content: '🞁';
+            }
+            th.sort-desc::after {
+                content: '🞃';
+            }
+        }
+    }
+}

@@ -1,0 +1,130 @@
+/**  For Fake Reactive Component oriented Library
+ * @file dialog.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "sass:color";
+@use "@styles/sass/global/vars" as *;
+@use "@styles/sass/global/mixins" as *;
+
+dialog {
+    padding: 0;
+    margin: auto;
+    max-width: 90vw;
+    max-height: 90vh;
+    min-height: 10vh;
+    width: auto;
+    border: none;
+    background-color: color.scale($accent-skyblue, $lightness: 80%);
+    border-radius: $radius-large;
+    box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 1);
+    font-size: $font-size-medium;
+
+    &::backdrop {
+        background-color: $achromatic-black;
+        opacity: 0.4;
+        filter: blur(1rem);
+    }
+
+    header {
+        width: 100%;
+        border-bottom: solid;
+        border-radius: $radius-large $radius-large 0 0;
+        background-color: $accent-skyblue;
+        text-align: center;
+        font-size: $font-size-medium;
+        font-weight: $base-weight-semibold;
+        span {
+            margin: auto;
+        }
+        .icon {
+            font-size: 4rem;
+            cursor: pointer;
+        }
+    }
+    .content {
+        padding: 1rem;
+        width: 100%;
+        overflow: auto;
+    }
+    footer {
+        padding: 1rem;
+        width: 100%;
+    }
+
+    &.admon, &status { // <dialog class="admon" || class="status"
+        .content {
+            .icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                span {
+                    // font-family: 'Material Symbols Sharp';
+                    font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+                    font-size: 100px;
+                }
+            }
+            .icon::before {
+                display: block;
+                    font-family: 'Material Symbols Sharp';
+                    font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+                    font-size: 4.8rem;
+            }
+            .body {
+                border-left: 0.2rem solid;
+                padding-left: 1rem;
+                font-size: $font-size-normal;
+                font-weight: $base-weight-medium;
+            }
+        } 
+        &.notice, &.info { // <dialog class="admon notice" || class="status info"
+            @include box-color($color-info, $color-darkness, 80%, $color-darkness);
+            header {
+                background-color: $color-info;
+            }
+            .content {
+                .icon {
+                    color: $color-info;
+                }
+            }
+        }
+        &.caution  { // <dialog class="admon warning"
+            @include box-color($color-warning, $color-darkness, 80%, $color-darkness);
+            header {
+                background-color: $color-warning;
+            }
+            .content {
+                .icon {
+                    color: $color-warning;
+                }
+            }
+        }
+        &.warning, &.error { // <dialog class="admon caution" || class="status error"
+            @include box-color($color-error, $color-darkness, 80%, $color-darkness);
+            header {
+                background-color: $color-error;
+            }
+            .content {
+                .icon {
+                    color: $color-error;
+                }
+            }
+        }
+    }
+    &.status {
+        &.success { // green
+            @include box-color($color-success, $color-darkness, 80%, $color-darkness);
+            header {
+                background-color: $color-success;
+            }
+            .content {
+                .icon {
+                    color: $color-success;
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,54 @@
+/**  For Fake Reactive Component oriented Library
+ * @file vars.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "sass:color";
+@use "vars" as *;
+
+/** sticky
+ * $top top position default 0
+ * $left left position default 0
+ * $zidx value of z-index default 10
+ */
+@mixin sticky($top: 0, $left: 0, $zidx: 10) {
+    position: sticky;
+    top: $top;
+    left: $left;
+    border-top: none;
+    z-index: $zidx;
+}
+///
+/// BOX
+///
+/** box color
+ * $base is base color
+ * $border is border litness of $base percent -50% to 50%
+ * $background is background litness of $base percent -50% to 50%
+ * $outline is outline litness of $base percent -50% to 50%
+ */
+@mixin box-color($base, $border: 0%, $background: 50%, $outline: -25%) {
+    border-color: color.scale($base, $lightness: $border);
+    background-color: color.scale($base, $lightness: $background);
+    outline-color: color.scale($base, $lightness: $outline);
+}
+/**
+ * $radius border radius default 0.4rem
+ * $width border width default 0.1rem
+ * $type border type default solid
+ */
+@mixin box-border($radius: $basee-border-radius, $width: $base-border-width, $type: solid) {
+    border-radius: $radius;
+    border: $width $type;
+}
+/**
+ * $radius border radius
+ * $width border width
+ */
+@mixin box-base ($radius: $base-border-radius, $width: $base-border-width) {
+    display: block;
+    @include box-border($radius, $width, solid);
+    box-shadow: 0 1px 3px $achromatic-grey;
+}

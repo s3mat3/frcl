@@ -31,6 +31,7 @@ export default defineConfig({
         alias: {
             '@examples' : resolve(root, '/examples'),
             '@dist' : resolve(root, '/dist'),
+            '@styles' : resolve(root, '../styles'),
         },
     },
     css: {
@@ -44,27 +45,20 @@ export default defineConfig({
         minify: true,
     },
     build: {
-        outDir: '../dist',
+        outDir: "../dist",
         emptyOutDir: true,
         sourcemap: true,
-        minify: 'esbuild',
-        terserOptions: {
-            module: true,
-            toplevel: true,
-            compress: {
-                passes: 1,
-            },
-        },
+        minify: "esbuild",
         lib: {
-            // minifyES: true,
-            entry: 'index.js',
-            name: 'frcl',
+            minifyES: true,
+            entry: "index.js",
+            name: "frcl",
             formats: ["es", "umd"],
             fileName: (format) => `frcl.${format}.js`,
         },
         // rollupOptions: {
         //     input: {
-        //         sndb: resolve("/examples", '/sndb/', 'index.html'),
+        //         s: resolve("@examples", "/showcasee/", "index.html"),
         //     },
         //     // output: {
         //     //     entryFileNames: `assets/[name]/entrypoint.js`,

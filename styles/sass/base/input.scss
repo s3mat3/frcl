@@ -1,0 +1,171 @@
+/**  For Fake Reactive Component oriented Library
+ * @file input.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "sass:math";
+@use "@styles/sass/global/vars" as *;
+@use "@styles/sass/global/mixins" as *;
+
+label {
+    // display: block;
+    padding-top: 1rem;
+    font-weight: $base-weight-semibold;
+    font-size: $font-size-normal;
+    &.is-small {
+        font-size: $font-size-small;
+    }
+    &.is-normal {
+    }
+    &.is-medium {
+        font-size: $font-size-medium;
+    }
+    &.is-large {
+        font-size: $font-size-large;
+    }
+}
+
+@function _calcHeight($size) {
+    @return $size *  $html-base-line-height * 1.4;
+}
+
+input:not([type="checkbox"],[type="radio"],[type="submit"],[type="button"],[type="reset"]),
+select,
+textarea {
+    @mixin _size-adjust($text-size, $icon-size, $radius) {
+        $--padding: calc($icon-size + 1rem);
+        height: _calcHeight($text-size);
+        font-size: $text-size;
+        border-radius: $radius;
+        &+span.icon {
+            font-size: $icon-size;
+        }
+        &.icon-pos-left {
+            padding-left: $--padding;
+        }
+        &.icon-pos-right {
+            padding-right: $--padding;
+        }
+    }
+    @include box-base($base-border-radius, $base-border-width);
+    font-size: $font-size-normal;
+    max-width: 100%;
+    &::placeholder {
+        font-weight: $base-weight-medium;
+        color: $base-placeholder-color;
+        opacity: 0.5;
+    }
+
+    // size
+    &.is-small {
+        @include _size-adjust($font-size-small, $icon-font-small, $radius-small);
+    }
+    &.is-normal {
+        @include _size-adjust($font-size-normal, $icon-font-normal, $radius-normal);
+    }
+    &.is-medium {
+        @include _size-adjust($font-size-medium, $icon-font-medium, $radius-medium);
+    }
+    &.is-large {
+        @include _size-adjust($font-size-large, $icon-font-large, $radius-large);
+    }
+    // color
+    &.is-primary {
+        @include box-color($color-primary, 0%, $color-lightness, $color-darkness);
+    }
+    &.is-info {
+        @include box-color($color-info, 0%, $color-lightness, $color-darkness);
+    }
+    &.is-success {
+        @include box-color($color-success, 0%, $color-lightness, $color-darkness);
+    }
+    &.is-warning {
+        @include box-color($color-warning, 0%, $color-lightness, $color-darkness);
+    }
+    &.is-error {
+        @include box-color($color-error, 0%, $color-lightness, $color-darkness);
+    }
+    &.is-danger {
+        @include box-color($color-danger, 0%, $color-lightness, $color-darkness);
+    }
+}
+
+:disabled,
+:disabled:hover {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.button,button,input,select,textarea {
+    &:focus, &:hover {
+        outline: 0.4rem auto;
+        opacity: 0.7;
+    }
+}
+
+
+.button,
+[type="button"],
+[type="reset"],
+[type="submit"],
+button {
+    @mixin _size-adjust($text-size, $icon-size) {
+        font-size: $text-size;
+        height: _calcHeight($text-size);
+        &.has-icon {
+            .icon{
+                font-size: $icon-size;
+            }
+        }
+    }
+    max-width: 100%;
+    margin: auto;
+    padding: 0.5rem 1rem;
+    @include box-base($radius-normal, 1px);
+    @include box-color($achromatic-lightgrey, $color-darkness, $color-lightness, $color-darkness);
+    font-size: $font-size-normal;
+    // font-weight: $base-weight-medium;
+    text-align: center;
+    // transition: opacity 0.2s ease;
+    transition: border-color 0.25s;
+    text-decoration: none;
+    transform: scale(1);
+    cursor: pointer;
+    /// size
+    &.is-small {
+        @include _size-adjust($font-size-small, $icon-font-small);
+    }
+    &.is-normal {
+        @include _size-adjust($font-size-normal, $icon-font-normal);
+    }
+    &.is-medium {
+        @include _size-adjust($font-size-medium, $icon-font-medium);
+    }
+    &.is-large {
+        @include _size-adjust($font-size-large, $icon-font-large);
+    }
+    &.is-full-width {
+        width: 100%;
+    }
+    /// color
+    &.is-primary {
+        @include box-color($color-primary, $color-darkness, $color-lightness, $color-darkness);
+    }
+    &.is-info {
+        @include box-color($color-info, $color-darkness, $color-lightness, $color-darkness);
+    }
+    &.is-success {
+        @include box-color($color-success, $color-darkness, $color-lightness, $color-darkness);
+    }
+    &.is-warning {
+        @include box-color($color-warning, $color-darkness, $color-lightness, $color-darkness);
+    }
+    &.is-error {
+        @include box-color($color-error, $color-darkness, $color-lightness, $color-darkness);
+    }
+    &.is-danger {
+        @include box-color($color-danger, $color-darkness, $color-lightness, $color-darkness);
+    }
+}

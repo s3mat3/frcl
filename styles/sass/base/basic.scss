@@ -1,0 +1,81 @@
+/**  For Fake Reactive Component oriented Library
+ * @file basic.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "sass:math";
+@use "@styles/sass/global/vars" as *;
+///
+/// html
+///
+html {
+    font-size: $html-base-font-size;
+    font-weight: $html-base-font-weight;
+    font-family: $html-base-font-family;
+    line-height: $html-base-line-height;
+    font-size-adjust: 0.54;
+    user-select: none;
+}
+///
+/// body
+///
+body {
+    margin: auto;
+    padding: 0;
+    background-color: $base-bg-color;
+    font-size: $font-size-normal;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+///
+/// heading
+///
+h1 {
+    font-size: $html-size-h1;
+    font-weight: $base-weight-bold;
+}
+h2 {
+    font-size: $html-size-h2;
+    font-weight: $base-weight-semibold;
+}
+h3 {
+    font-size: $html-size-h3;
+    font-weight: $base-weight-semibold;
+}
+h4 {
+    font-size: $html-size-h4;
+    font-weight: $base-weight-semibold;
+}
+h5 {
+    font-size: $html-size-h5;
+    font-weight: $base-weight-medium;
+}
+h6 {
+    font-size: $html-size-h6;
+    font-weight: $base-weight-medium;
+}
+///
+///! grid system (12col)
+///
+.row {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    // for 12 column
+    @for $i from 1 through 12 {
+        .col-#{$i} {
+            grid-column: span #{$i};
+        }
+    }
+    // column gap
+    @for $i from 1 through 5 {
+        .has-gap-#{$i} {
+            $--margin: #{math.div($i, 5)};
+            margin-left: #{$--margin}rem;
+            margin-right: #{$--margin}rem;
+        }
+    }
+}
