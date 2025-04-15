@@ -9,32 +9,122 @@
   <body>
     <div id="app" class="grid">
       <div class="row">
-        <div class="col-1">
-          <button id="modal_1_open">modal-1</button>
-        </div>
-        <div id="modal_1" class="col-11"></div>
+        <p class="col-12" style="font-size: 2rem;text-align: center; padding:1.5rem;">
+          Simple dialog example
+        </p>
       </div>
-      <!--  -->
-      <dialog class="admon warning" open>
-        <header class="header">
-          <!-- <p style="display: inline-block; vertical-align: middle">Hello</p> -->
-          Hello
-        </header>
-        <div class="content row">
-          <div class="icon col-3">
-            <span class="material-symbols-outlined">warning</span>
-          </div>
-          <div class="body col-9">
-            fugahogepiyo
-          </div>
+      <!-- simple -->
+      <div class="row">
+        <button id="modal_1_open" class="col-1 is-primary is-large" style="width: 15rem;">simple</button>
+        <div class="col-11">
+          <pre>
+const simple = modalDialog("Hello simple", mo, dialogContent(hello, world));
+          </pre>
         </div>
-      </dialog>
-      <!-- <div>
-           <label for="input_1">
-           hello
-           </label>
-           <input id="input_1" placeholder="kerokero"/>
-           </div> -->
+        <div id="modal_1"></div>
+      </div>
+      <div class="row">
+        <p class="col-12" style="font-size: 2rem;text-align: center; padding:1.5rem;">
+          Adomnision message dialog example
+        </p>
+      </div>
+      <!-- admon warning -->
+      <div class="row">
+        <button id="modal_2_open" class="col-1 is-danger is-large" style="width: 15rem;"><span>warning</span></button>
+        <div class="col-11">
+          <pre>
+const warn = messageDialog("admon",
+                           "warning",
+                            dialogOption(true),
+                            nel("div",
+                                {},
+                                element`&lt;p&gt;&lt;span&gt;warning&lt;/span&gt;&lt;/p&gt;`)); 
+          </pre>
+        </div>
+        <div id="modal_2"></div>
+      </div>
+      <!-- admon caution -->
+      <div class="row">
+        <button id="modal_3_open" class="col-1 is-warning is-large" style="width: 15rem;"><span>caution</span></button>
+        <div class="col-11">
+          <pre>
+const caution = messageDialog("admon",
+                              "caution",
+                              dialogOption(true),
+                              nel("div",
+                                  {},
+                                  element`&lt;p&gt;&lt;span&gt;caution&lt;/span&gt;&lt;/p&gt;`)); 
+          </pre>
+        </div>
+        </div>
+        <div id="modal_3"></div>
+      </div>
+      <!-- admon notice -->
+      <div class="row">
+        <button id="modal_4_open" class="col-1 is-info is-large" style="width: 15rem;"><span>notice</span></button>
+        <div class="col-11">
+          <pre>
+const notice = messageDialog("admon",
+                             "notice",
+                             dialogOption(true),
+                             nel("div",
+                                 {},
+                                 element`&lt;p&gt;&lt;span&gt;notice&lt;/span&gt;&lt;/p&gt;`)); 
+          </pre>
+        </div>
+        <div id="modal_4"></div>
+      </div>
+      <!-- status error -->
+
+      <div class="row">
+        <p class="col-12" style="font-size: 2rem;text-align: center; padding:1.5rem;">
+          Status message dialog example
+        </p>
+      </div>
+      <div class="row">
+        <button id="modal_5_open" class="col-1 is-error is-large" style="width: 15rem;"><span>error</span></button>
+        <div class="col-11">
+          <pre>
+const error = messageDialog("status",
+                            "error",
+                            dialogOption(true),
+                            nel("div",
+                                {},
+                                element`&lt;p&gt;&lt;span&gt;error&lt;/span&gt;&lt;/p&gt;`)); 
+          </pre>
+        </div>
+        <div id="modal_5"></div>
+      </div>
+      <!-- status success -->
+      <div class="row">
+        <button id="modal_6_open" class="col-1 is-success is-large" style="width: 15rem;"><span>success</span></button>
+        <div class="col-11">
+          <pre>
+const success = messageDialog("status",
+                              "success",
+                              dialogOption(true),
+                              nel("div",
+                                  {},
+                                  element`&lt;p&gt;&lt;span&gt;success&lt;/span&gt;&lt;/p&gt;`)); 
+          </pre>
+        </div>
+        <div id="modal_6"></div>
+      </div>
+      <!-- status info -->
+      <div class="row">
+        <button id="modal_7_open" class="col-1 is-info is-large" style="width: 15rem;"><span>info</span></button>
+        <div class="col-11">
+          <pre>
+const info = messageDialog("status",
+                           "notice",
+                           dialogOption(true),
+                           nel("div",
+                               {},
+                               element`&lt;p&gt;&lt;span&gt;notice&lt;/span&gt;&lt;/p&gt;`)); 
+          </pre>
+        </div>
+        <div id="modal_7"></div>
+      </div>
     </div>
     <script type="module" src="main.js"></script>
   </body>

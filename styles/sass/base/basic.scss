@@ -58,6 +58,16 @@ h6 {
     font-size: $html-size-h6;
     font-weight: $base-weight-medium;
 }
+pre {
+  margin: 1rem;
+  padding: 1em;
+  border-radius: $radius-medium;
+  background: $base-skyblue;
+  font-size: $font-size-small;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 ///
 ///! grid system (12col)
 ///

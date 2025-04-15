@@ -54,7 +54,7 @@ dialog {
         width: 100%;
     }
 
-    &.admon, &status { // <dialog class="admon" || class="status"
+    &.admon, &.status { // <dialog class="admon" || class="status"
         .content {
             .icon {
                 display: flex;
@@ -78,7 +78,7 @@ dialog {
                 font-size: $font-size-normal;
                 font-weight: $base-weight-medium;
             }
-        } 
+        }
         &.notice, &.info { // <dialog class="admon notice" || class="status info"
             @include box-color($color-info, $color-darkness, 80%, $color-darkness);
             header {

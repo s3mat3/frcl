@@ -30,7 +30,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@examples' : resolve(root, '/examples'),
-            '@dist' : resolve(root, '/dist'),
+            '@dist' : resolve(root, '../dist'),
             '@styles' : resolve(root, '../styles'),
         },
     },
@@ -43,6 +43,7 @@ export default defineConfig({
     },
     esbuild: {
         minify: true,
+        drop: ['console', 'debugger'],
     },
     build: {
         outDir: "../dist",
@@ -51,20 +52,22 @@ export default defineConfig({
         minify: "esbuild",
         lib: {
             minifyES: true,
-            entry: "index.js",
+            entry: ["index.js"],
             name: "frcl",
             formats: ["es", "umd"],
             fileName: (format) => `frcl.${format}.js`,
         },
         // rollupOptions: {
         //     input: {
-        //         s: resolve("@examples", "/showcasee/", "index.html"),
+        //         small1: resolve(root, "examples/small1", "index.html"),
+        //         small2: resolve(root, "examples/small2", "index.html"),
+        //         showcase: resolve(root, "examples/showcase", "index.html"),
         //     },
-        //     // output: {
-        //     //     entryFileNames: `assets/[name]/entrypoint.js`,
-        //     //     chunkFileNames: `assets/[name]/chank.js`,
-        //     //     assetFileNames: `assets/[name]/asset.[ext]`,
-        //     // },
+        //     output: {
+        //         entryFileNames: `examples/[name]/entrypoint.js`,
+        //         chunkFileNames: `examples/[name]/chank.js`,
+        //         assetFileNames: `examples/[name]/asset.[ext]`,
+        //     },
         // },
     },
     test: {
