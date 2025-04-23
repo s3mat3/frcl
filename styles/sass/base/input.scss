@@ -27,8 +27,29 @@ label {
     }
 }
 
+.label-input {
+    margin: auto;
+    .with-icon {
+        position: relative;
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
+        // background-color: red;
+    }
+}
+
 @function _calcHeight($size) {
     @return $size *  $html-base-line-height * 1.4;
+}
+
+input:not([type="checkbox"],[type="radio"],[type="submit"],[type="button"],[type="reset"]),
+textarea,
+pre,
+code {
+    user-select: text;
+    // &::after, &::before, .icon {
+    //     user-select: none;
+    // }
 }
 
 input:not([type="checkbox"],[type="radio"],[type="submit"],[type="button"],[type="reset"]),
@@ -40,7 +61,7 @@ textarea {
         font-size: $text-size;
         border-radius: $radius;
         &+span.icon {
-            font-size: $icon-size;
+            font-size: $icon-size * 3;
         }
         &.icon-pos-left {
             padding-left: $--padding;
@@ -51,13 +72,21 @@ textarea {
     }
     @include box-base($base-border-radius, $base-border-width);
     font-size: $font-size-normal;
+    width: 100%;
     max-width: 100%;
     &::placeholder {
         font-weight: $base-weight-medium;
         color: $base-placeholder-color;
         opacity: 0.5;
     }
-
+    &:has(p.with-icon) {
+    }
+    &+span.icon {
+        position: absolute;
+        top: 50%;
+        right: 0.4rem;
+        transform: translateY(-50%);
+    }
     // size
     &.is-small {
         @include _size-adjust($font-size-small, $icon-font-small, $radius-small);

@@ -21,7 +21,8 @@ dialog {
     border-radius: $radius-large;
     box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 1);
     font-size: $font-size-medium;
-
+    user-select: none;
+    
     &::backdrop {
         background-color: $achromatic-black;
         opacity: 0.4;
