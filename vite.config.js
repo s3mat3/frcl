@@ -52,10 +52,20 @@ export default defineConfig({
         minify: "esbuild",
         lib: {
             minifyES: true,
-            entry: ["index.js"],
+            // entry: ["index.js"],
+            entry: {
+                frcl: resolve(root, "index.js"),
+                component: resolve(root, "component", "index.js"),
+            },
             name: "frcl",
-            formats: ["es", "umd"],
-            fileName: (format) => `frcl.${format}.js`,
+            formats: ["es"],
+            //fileName: (format) => `frcl.${format}.js`,
+        },
+        rollupOptions: {
+            output: {
+                chunkFileNames: 'chunks/[name].js',
+                assetFileNames: 'assets/[name][extname]',
+           }
         },
         // rollupOptions: {
         //     input: {
