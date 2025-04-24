@@ -1,3 +1,14 @@
+Version 0.3.1:
+ - Add misc.js.
+ - Move function emit from emit.js to fr.js
+ - Remove files.
+ - Fix Open login dialog with password visible #5
+ - Add dialog and login-dialog component.
+ - Add labelInput comment.
+ - Fix #4 Nel.mount update.
+ - Progress #2 remove element.js
+ - Add scss and many change.
+
 Version 0.3.0:
  - Add css and modal samples.
  - Change method name attach to mount in Nel class.
