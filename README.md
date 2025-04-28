@@ -22,6 +22,7 @@ $ make run
 * "make develop" build debug mode library
 * "make unit" run test
 
+<!--
 > [!NOTE]
 > When testing reactive.test.js, change the _invoke_reactions in ./core/reactive.js as follows. Because I don't know how to delay the execution of vitest...
 
@@ -66,3 +67,4 @@ function _invoke_reactions(t, k, d = {}) {
     }
 }
 ```
+-->
