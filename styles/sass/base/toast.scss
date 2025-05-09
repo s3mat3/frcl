@@ -1,0 +1,82 @@
+/**  For Fake Reactive Component oriented Library
+ * @file toast.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "@styles/sass/global/vars" as *;
+
+.toast {
+    font-size: $font-size-normal;
+    font-weight: $base-weight-medium;
+    background-color: $color-info;
+    border-radius: $radius-medium;
+    padding : 16px;
+    position : fixed;
+    top : 0%;
+    left : 50%;
+    opacity : 0;
+    -webkit-font-smoothing: none;
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
+    // transition : opacity 0.3s ease-in-out;
+    z-index : 9999;
+    animation: toast  2s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+
+    &.is-info {
+        background-color: $color-info;
+    }
+    &.is-success {
+        background-color: $color-success;
+    }
+    &.is-error {
+        background-color: $color-error;
+    }
+    &.is-warning {
+        background-color: $color-warning;
+    }
+}
+
+@keyframes toast {
+    0% {
+        top: 80%;
+        left: 50%;
+        transform: scale(0.1) skew(0deg, 0deg);;
+        opacity: 0;
+        border: 2rem solid black;
+    }
+    5% {
+        transform: skew(20deg, 20deg);
+    }
+    10% {
+        transform: skew(-20deg, -20deg);
+    }
+    15% {
+        transform: skew(10deg, 10deg);
+    }
+    20% {
+        transform: skew(-10deg, -10deg);
+    }
+    25% {
+        transform: skew(5deg, 5deg);
+    }
+    30% {
+        transform: skew(-5deg, -5deg);
+    }
+    35% {
+        transform: skew(3deg, 3deg);
+    }
+    50% {
+        transform:  translate(0%, -50%) skew(-10deg, -10deg);
+    }
+    100% {
+        top: 20%;
+        left: 50%;
+        transform: scale(1) translate(-50%, -50%) skew(0deg, 0deg);
+        opacity: 1;
+        border: 0.2rem solid black;
+    }
+
+}
+
