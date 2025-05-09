@@ -1,3 +1,8 @@
+Version 0.5.0:
+ - Many change and many add.
+ - Delete modal.js
+ - Add test in some case
+
 Version 0.4.1:
  - Fix #10 Asynchronous testing doesn't work with vitest.
 
