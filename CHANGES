@@ -1,3 +1,8 @@
+Version 0.7.1:
+ - Fixed buggy LoginDialog class
+ - Progress #11
+ - Fix typo
+
 Version 0.7.0:
  - Add fetch api wrapper.
 
