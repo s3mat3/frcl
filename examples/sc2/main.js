@@ -1,4 +1,4 @@
-import "../../../styles/frcl.scss";
+import "../../styles/frcl.scss";
 import { table, tableOption } from "../../component/parts/table.js";
 
 document.addEventListener("fr:row-edit-request", e => {

@@ -12,7 +12,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 // import basicSsl from '@vitejs/plugin-basic-ssl'; // Only development
 
-const root   = resolve(__dirname, 'lib');
+const root   = resolve(__dirname, '.');
 const publicDir  = resolve(__dirname, 'public');
 
 export default defineConfig({
@@ -30,8 +30,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '@examples' : resolve(root, '/examples'),
-            '@dist' : resolve(root, '../dist'),
-            '@styles' : resolve(root, '../styles'),
+            '@dist' : resolve(root, '/dist'),
+            '@styles' : resolve(root, '/styles'),
         },
     },
     css: {
@@ -46,7 +46,7 @@ export default defineConfig({
         drop: ['console', 'debugger'],
     },
     build: {
-        outDir: "../dist",
+        outDir: "dist",
         emptyOutDir: true,
         sourcemap: true,
         minify: "esbuild",
