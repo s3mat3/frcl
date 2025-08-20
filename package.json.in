@@ -1,19 +1,26 @@
 {
     "name": "frcl",
-    "private": true,
     "version": "@FRCL_VERSION@",
     "type": "module",
-    "main": "./dist/frcl.es.cjs",
-    "module": "./dist/index.js",
+    "main": "./dist/core.cjs.js",
+    "module": "./dist/core.es.js",
+    "exports" : {
+        ".": {
+            "import": "./dist/core.es.js",
+            "require": "./dist/core.cjs.js"
+        },
+        "./component": {
+            "import": "./dist/component.es.js",
+            "requere": "./dist/component.cjs.js"
+        },
+        "./frcl.css": "./dist/assets/frcl.css"
+    },
     "author": "s3mat3",
     "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/s3mat3/frcl"
     },
-    "files": [
-        "dist"
-    ],
     "scripts": {
         "dev": "vite --mode development",
         "build": "vite build --mode production",

@@ -12,28 +12,10 @@
 
 import "@styles/frcl.scss";
 
-export { monitor, createReaction } from "./core/reactive";
-export { Notificator } from "./core/notificator";
-export {
-    emit,
-    extractTypeName,
-    isMatchType,
-    isEmptyObj,
-    isElement,
-    escapeHtmlSpecialChars,
-    buildElement,
-    element,
-    setEvent,
-    SerialID,
-    Reference,
-    useRef,
-    NodeElement,
-    NType,
-    Nel,
-    nel,
-    NodeParts,
-    defaultOption
-} from "./core/fr";
-
+export * from "./core/fr";
+export * from "./core/misc";
+export * from "./core/hrequest";
+export * from "./core/notificator";
+export * from "./core/reactive";
 
 /* //<-- index.js ends here*/

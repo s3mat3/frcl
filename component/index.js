@@ -11,30 +11,17 @@
 "use strict";
 
 import "@styles/frcl.scss";
-export { footerOption, footer } from "./parts/fragment/footer";
-export { header, dialogHeaderOption, dialogHeader } from "./parts/fragment/header";
-export {
-    iconFontOption,
-    IconFont,
-    createIconFont,
-    iconFont,
-    EmphasisGrade, } from "./parts/fragment/icon-font";
-export {
-    inputOption,
-    Input,
-    labelInputOption,
-    LabelInput,
-    PasswordInput, } from "./parts/fragment/label-input";
-
-export {
-    dialogOption,
-    Dialog,
-    dialog,
-    dialogContent,
-    messageDialog, } from "./parts/dialog";
-
-// export {
-//     LoginDialog,
-//     loginDialog, } from "./login-dialog";
+// fragment
+export * from "./parts/fragment/footer";
+export * from "./parts/fragment/header";
+export * from "./parts/fragment/icon-font";
+export * from "./parts/fragment/label-input";
+export * from "./parts/fragment/dropdown";
+// parts
+export * from "./parts/dialog";
+export * from "./parts/table";
+// component
+export * from "./login-dialog";
+export * from "./edit-dialog";
 
 /* //<-- index.js ends here*/

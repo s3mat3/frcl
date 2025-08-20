@@ -49,36 +49,23 @@ export default defineConfig({
         outDir: "dist",
         emptyOutDir: true,
         sourcemap: true,
-        minify: "esbuild",
+        minify: true,
         lib: {
-            minifyES: true,
-            // entry: ["index.js"],
+            // minifyES: true,
             entry: {
-                frcl: resolve(root, "index.js"),
+                core: resolve(root, "index.js"),
                 component: resolve(root, "component", "index.js"),
             },
             name: "frcl",
-            formats: ["es"],
-            //fileName: (format) => `frcl.${format}.js`,
+            formats: ["es", "cjs"],
+            fileName: (format) => `[name].${format}.js`,
         },
         rollupOptions: {
             output: {
-                chunkFileNames: 'chunks/[name].js',
+                chunkFileNames: 'chunks/[name].[format].js',
                 assetFileNames: 'assets/[name][extname]',
            }
         },
-        // rollupOptions: {
-        //     input: {
-        //         small1: resolve(root, "examples/small1", "index.html"),
-        //         small2: resolve(root, "examples/small2", "index.html"),
-        //         showcase: resolve(root, "examples/showcase", "index.html"),
-        //     },
-        //     output: {
-        //         entryFileNames: `examples/[name]/entrypoint.js`,
-        //         chunkFileNames: `examples/[name]/chank.js`,
-        //         assetFileNames: `examples/[name]/asset.[ext]`,
-        //     },
-        // },
     },
     test: {
         globals: true,
