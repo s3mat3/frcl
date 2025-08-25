@@ -1,3 +1,7 @@
+Version 0.100.1:
+ - Fix LabelInput class.
+ - Rename view-model.
+
 v0.100.0
 - Change README
 - Change course
