@@ -105,7 +105,7 @@ class LabelInput extends fr.NodeParts {
     icon = undefined;
     /**
      *  @param { String } n is label name
-     *  @param { LabelInputOption } o is option 
+     *  @param { LabelInputOption } o is option
      */
     constructor(n, o) {
         o = (o) ? o : labelInputOption();
@@ -124,7 +124,7 @@ class LabelInput extends fr.NodeParts {
         o.label.class.push(o.size);
         o.label.for = this.input.id;
         this.label = fr.nel("label", o.label, n);
-        this._node = fr.nel("p",
+        this._node = fr.nel("div",
                            {class:["label-input"]},
                            this.label,
                            fr.nel("p",
