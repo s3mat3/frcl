@@ -13,9 +13,10 @@
 import "material-symbols/outlined.css";
 import "@styles/frcl.scss";
 import * as fr from "../../index";
-import { dropdownItem, labelDropdown, labelDropdownOption } from "../../component/parts/fragment/dropdown";
+import { dropdownItem, } from "../../component/parts/fragment/dropdown";
+import { labelDropdown, labelDropdownOption } from "../../component/parts/label-dropdown";
 import { dialogOption } from "../../component/parts/dialog";
-import { ColumnConfiguration, ColumnType } from "../../component/view-model/column-configuration";
+import { ColumnConfiguration, ColumnType } from "../../lib/view-model/column-configuration";
 import { EditDialog } from "../../component/edit-dialog"
 
 const md  = $$("#app");
@@ -68,7 +69,7 @@ const test_data_set = {
     ],
     data: dummy_data[4],
 }
-const edit = new EditDialog("Hogehoge", "65vw", dialogOption(true), test_data_set);
+const edit = new EditDialog("Hogehoge", "40vw", dialogOption(true), test_data_set);
 function eedit() {
     fr.setEvent(btn, "click", () => {
         edit.open();
@@ -77,6 +78,9 @@ function eedit() {
         edit.close();
     });
 }
+
+document.addEventListener('fr:edit-mod', (e) => {console.log(e.detail);});
+
 edit.dialog.node.mounted = [eedit, ];
 edit.dialog.mount(md);
 
