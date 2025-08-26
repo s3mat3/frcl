@@ -1,3 +1,7 @@
+v0.100.2
+- Closed #12 Promote the LabelInput class
+- Progress #12 Promote the LabelInput class
+
 Version 0.100.1:
  - Fix LabelInput class.
  - Rename view-model.
