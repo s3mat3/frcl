@@ -15,9 +15,9 @@ import "@styles/frcl.scss";
 export * from "./parts/fragment/footer";
 export * from "./parts/fragment/header";
 export * from "./parts/fragment/icon-font";
-export * from "./parts/fragment/label-input";
 export * from "./parts/fragment/dropdown";
 // parts
+export * from "./parts/label-input";
 export * from "./parts/dialog";
 export * from "./parts/table";
 // component

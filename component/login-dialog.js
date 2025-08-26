@@ -11,7 +11,7 @@
 "use strict";
 import * as fr from "../core/fr";
 import { Dialog, dialogOption } from "./parts/dialog";
-import { LabelInput, PasswordInput, labelInputOption } from "./parts/fragment/label-input";
+import { LabelInput, PasswordInput, labelInputOption } from "./parts/label-input";
 
 /**
  * <dialog>

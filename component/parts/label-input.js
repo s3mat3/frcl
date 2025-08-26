@@ -10,79 +10,31 @@
  */
 'use strict';
 
-import * as fr from "../../../core/fr";
-import { iconFont, iconFontOption } from "./icon-font";
-const labelOption = () => {
-    return fr.defaultOption();
-}
-
-/**
- * @typedef { Object } InputOption
- * @property { String } value - input value
- * @property { String } placeholder - placeholder text in input box
- * @property { string } size - input value size (length)
- * @property { string } type - input box type
- */
-/**
- *  @returns { InputOption }
- */
-const inputOption = (t = "text", p = "input", s = "25", v = "") => {
-    return {
-        value: "",
-        placeholder: p,
-        type: t,
-        size: s,
-        name: "no-name",
-        class: [],
-    }
-}
-
-class Input extends fr.Nel {
-    constructor(o) {
-        super(fr.NType.tagname, "input", o);
-        this.id = "input";
-    }
-
-    get value() {
-        this.attrs.value = fr.escapeHtmlSpecialChars(this._elm.value);
-        return this.attrs.value;
-    }
-
-    set value(v) {
-        this.attrs.value = this._elm.value = v;
-        this._elm.setAttribute("value", this.attrs.value);
-    }
-
-    get name_attr() {
-        return this.attrs.name;
-    }
-
-    set name_attr(n) {
-        this.attrs.name = n;
-        this._elm.setAttribute("name", this.attrs.name);
-    }
-
-}
-
+import * as fr from "../../core/fr";
+import { iconFont, iconFontOption } from "./fragment/icon-font";
+import { Input, inputOption, labelOption } from "./fragment/input";
 /**
  * @typedef { Object } LabelInputOption
  * @property { String } size - input and label size only 4patern (is-small, is-normal, is-midume, is-large)
  * @property { String } icon - icon name
  * @property { String } pos  - icon position in input box
- * @property { InputOption } input
- * @property { LabelOption } label
+ * @property { String } lpos - label position for input box "side" : left side, "" : left top
+ * @property { import("./fragment/input").InputOption } input
+ * @property { fr.DefaultOption } label
  */
 /**
  *  @param { String } s is input and label size, select is-small, is-normal, is-medium, is-large
  *  @param { String } i is icon name
  *  @param { String } p is icon position
+ *  @param { String } lp is label position "" | "side"
  *  @return { LabelInputOption }
  */
-const labelInputOption = (s = "is-normal", i = "", p = "right") => {
+const labelInputOption = (s = "is-normal", i = "", p = "right", lp = "") => {
     return {
         size: s,
         icon: i,
         pos: p,
+        lpos: lp,
         input: inputOption(),
         label: labelOption(),
     }
@@ -118,6 +70,13 @@ class LabelInput extends fr.NodeParts {
             wop.push("with-icon");
         }
         const pos = (o.pos === "left") ? "icon-pos-left" : "icon-pos-right";
+        let opt;
+        if (o.lpos === "side") {
+            opt = fr.defaultOption(["side-label-input"]);
+            o.label.class.push("side-label");
+        } else {
+            opt = fr.defaultOption(["label-input"]);
+        }
         o.input.class.push(o.size);
         o.input.class.push(pos);
         this.input = new Input(o.input);
@@ -125,9 +84,9 @@ class LabelInput extends fr.NodeParts {
         o.label.for = this.input.id;
         this.label = fr.nel("label", o.label, n);
         this._node = fr.nel("div",
-                           {class:["label-input"]},
-                           this.label,
-                           fr.nel("p",
+                            opt,
+                            this.label,
+                            fr.nel("p",
                                   {class: [ ...wop ]},
                                   this.input,
                                   this.icon));
@@ -207,8 +166,6 @@ class PasswordInput extends LabelInput {
 }
 
 export {
-    inputOption,
-    Input,
     labelInputOption,
     LabelInput,
     PasswordInput,
