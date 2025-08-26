@@ -6,7 +6,7 @@
  */
 "use strict";
 
-import { labelDropdown, labelDropdownOption } from "./parts/fragment/dropdown";
+import { labelDropdown, labelDropdownOption } from "./parts/label-dropdown";
 import { Dialog, dialogOption } from "./parts/dialog";
 import { LabelInput, labelInputOption } from "./parts/label-input";
 import { ColumnConfiguration } from "@/lib/view-model/column-configuration";
