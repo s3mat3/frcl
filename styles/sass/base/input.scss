@@ -27,6 +27,22 @@ label {
     }
 }
 
+.side-label {
+    padding: 0;
+}
+
+.side-label-input {
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    .with-icon {
+        position: relative;
+    }
+    .input-wrapper {
+        margin-left: 1rem;
+    }
+}
+
 .label-input {
     margin: auto;
     .with-icon {
@@ -79,8 +95,6 @@ textarea {
         color: $base-placeholder-color;
         opacity: 0.5;
     }
-    &:has(p.with-icon) {
-    }
     &+span.icon {
         position: absolute;
         top: 50%;
@@ -125,6 +139,10 @@ textarea {
 :disabled:hover {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+.with-icon:has(span.icon) {
+    position: relative;
 }
 
 .button,button,input,select,textarea {

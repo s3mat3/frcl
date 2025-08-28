@@ -32,6 +32,7 @@ export default defineConfig({
             '@examples' : resolve(root, '/examples'),
             '@dist' : resolve(root, '/dist'),
             '@styles' : resolve(root, '/styles'),
+            '@' : resolve(root, '.'),
         },
     },
     css: {
