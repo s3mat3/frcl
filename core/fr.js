@@ -68,7 +68,7 @@ window.__proto__.$toast = (m, c = "is-info", t = 3) => {
  * Should use the entity name or entity number when you want to output any of these reserved characters.
  *  @see https://www.html.am/reference/html-special-characters.cfm
  *
- *  @param {String} target is string for output web browser
+ *  @param {String} [target] - string for output web browser
  */
 function escapeHtmlSpecialChars(target) {
     return target.replace(/[\'\"&<>]/g, (match) => {
@@ -84,7 +84,7 @@ function escapeHtmlSpecialChars(target) {
 }
 /**
  * Build element from HTML markup string
- *  @param { String } h is html markup string
+ *  @param { String } [h] - html markup string
  *  @returns { HTMLElement }
  */
 function buildElement(h) {
@@ -98,8 +98,8 @@ function buildElement(h) {
  * This idea was referenced in the "Escape HTML Strings" section of'https://jsprimer.net/use-case/ajaxapp/display/'.
  *  @caution All placeholder variables included html special chars are escaped
  *  @usage element`<html-tag>${some_variable} | another-some-tags</html-tag>`;
- *  @param { String } s is string as tags
- *  @param { Array<String> } vs is string array from ${some_variable}
+ *  @param { String } [s] - string as tags
+ *  @param { Array<String> } [vs] - string array from ${some_variable}
  *  @returns { HTMLElement }
  */
 function element(s, ...vs) {
@@ -112,9 +112,9 @@ function element(s, ...vs) {
 } /* //<-- function element ends here */
 /**
  * Emit custom event with context
- *  @param { String } n is name as event trigger
- *  @param { Any } d is detail of event (event data)
- *  @param { HTMLElement } c is event source element named context
+ *  @param { String } [n] - name as event trigger
+ *  @param { Any } [d] - detail of event (event data)
+ *  @param { HTMLElement } [c = document] - event source element named context
  */
 function emit(n, d, c = document) {
     if (! n) return;
@@ -127,9 +127,9 @@ function emit(n, d, c = document) {
 }
 /**
  * Remove and add event listener
- *  @param { HTMLElement } s is event souce (context)
- *  @param { String } e is event name
- *  @param { Function } l is function of event listener
+ *  @param { HTMLElement } s - event souce (context)
+ *  @param { String } e - event name
+ *  @param { Function } l - function of event listener
  */
 function setEvent(s, e, l) {
     s.removeEventListener(e, l);
@@ -137,8 +137,8 @@ function setEvent(s, e, l) {
 }
 /**
  * @typedef { Object } CurrentRegistering
- * @property { Object } ctx is context (Nel)
- * @property { Function } cb is call back for reaction
+ * @property { Object } [ctx] - context (Nel)
+ * @property { Function } [cb] - call back for reaction
  */
 /** @type { CurrentRegistering } @private in this file only */
 let _current_registering = undefined;
@@ -164,7 +164,7 @@ class Reference {
     _reactive = true;
     _listeners = undefined;
     /**
-     *  @param { Any } iv is initial value. not a initial vector www...
+     *  @param { Any } [iv] - initial value. not a initial vector www...
      */
     constructor(iv) {
         this.#val = this.#old = iv;
@@ -197,13 +197,13 @@ class Reference {
 }
 /**
  * @typedef { Object } RefKey
- * @property { Reference } r is instance of Reference
- * @property { String } k is key of r.value if value Object
+ * @property { Reference } [r] - instance of Reference
+ * @property { String } [k] - key of r.value if value Object
  */
 /**
  * @private
- *  @param { RefKey } r is tracking target
- *  @param { NodeElement } n is implements NodeElement object
+ *  @param { RefKey } [r] - tracking target
+ *  @param { NodeElement } [n] - implements NodeElement object
  *  @returns { Reference.value }
  */
 const _should_registering = (r, n) => {
@@ -215,8 +215,8 @@ const _should_registering = (r, n) => {
     return v;
 }
 /**
- *  @param { Reference } t is tracking object
- *  @param { String } k is key
+ *  @param { Reference } [t] - tracking object
+ *  @param { String } [k] - key
  *  @returns { RefKey }  packed object
  *  @example
  *  const x = new Refarence({name: "hoge", age: 18});
@@ -225,15 +225,14 @@ const _should_registering = (r, n) => {
  *  x = {name: "fuga", age: "98"};
  */
 const useRef = (t, k = "") => {
-    let r = {r: t, k: k};
-    return r;
+    return {r: t, k: k};
 }
 /** for Nel class type property
  * @typedef { Object } NType
- * @property { Number } tagname Nel class name property is string as tagname
- * @property { Number } element Nel class name property is HTMLElement
- * @property { Number } tempLiteral Nel class name property is string as html template literal
- * Other property is not implement now. @see class Nel build method
+ * @property { Number } tagname Nel class name property - string as tagname
+ * @property { Number } element Nel class name property - HTMLElement
+ * @property { Number } tempLiteral Nel class name property - string as html template literal
+ * Other property - not implement now. @see class Nel build method
  */
 const NType = {
     tagname     : 0,
@@ -248,7 +247,7 @@ const NType = {
  * @typedef { Array<Function> } FunctionList
  */
 /** internal use only
- *  @param { FunctionList } fl
+ *  @param { FunctionList } [fl]
  */
 const _invoke = (fl) => {
     if (!fl || !Array.isArray(fl) || fl.length === 0) return;
@@ -288,8 +287,8 @@ class NodeParts {
 }
 /**
  * @typedef { Object } Attrs
- * @property { Object | String } style is tag attribute of style
- * @property { Array<String> | String } class is tag attribute of class
+ * @property { Object | String } [style] - tag attribute of style
+ * @property { Array<String> | String } [class] - tag attribute of class
  */
 /**
  * Node ELement class named Nel
@@ -297,21 +296,21 @@ class NodeParts {
  *  @implements { NodeElement }
  */
 class Nel extends NodeElement{
-    /** @private @type { String } id is this node ID (number string) */
+    /** @private @type { String } [id = ""] - this node ID (number string) */
     #nid = "";
-    /** @protected @type { HTMLElement } elm is this node cache */
+    /** @protected @type { HTMLElement } [_elm = udefined] - this node cache */
     _elm = undefined;
-    /** @public @type { NType } type is node type  */
+    /** @public @type { NType } [type = NType.tagname] - node type  */
     type = NType.tagname;
-    /** @public @type { String } name is tag name */
+    /** @public @type { String } [name = ""] - tag name */
     name = ""
     /** @public @type { Attrs } */
     attrs = {
         style: {}
     };
-    /** @public @type { Array <Nel | HTMLElement | String | Reference> } children is this node children */
+    /** @public @type { Array <Nel | HTMLElement | String | Reference> } children - this node children */
     children = [];
-    /** @public @type { HTMLElement } p is this node parent */
+    /** @public @type { HTMLElement } p - this node parent */
     p = undefined;
     /** @public @type { FunctionList } functions object for befor create */
     beforeCreate = [];
@@ -327,10 +326,10 @@ class Nel extends NodeElement{
     unmounted = [];
     /**
      * constructor
-     *  @param { NType } t is this node type
-     *  @param { String } n is name of tag
-     *  @param { Attrs } a is attribute of this node
-     *  @param { Node | HTMLElement | Reference |  } cr is children of this node 
+     *  @param { NType } [t] - this node type
+     *  @param { String } [n] - name of tag
+     *  @param { Attrs } [a = {}] - attribute of this node
+     *  @param { Node | HTMLElement | Reference |  } [cr] - children of this node 
      */
     constructor(t, n, a = {}, ...cr) {
         super();
@@ -346,7 +345,7 @@ class Nel extends NodeElement{
      */
     get nid() {return this.#nid;}
     /**
-     *  @param { String } name is prefix this node top level tag's id attribute
+     *  @param { String } [name] - prefix this node top level tag's id attribute
      */
     set id(name) {
         this.attrs.id = `${name}_${this.#nid}`;
@@ -366,7 +365,7 @@ class Nel extends NodeElement{
     set parent(p) { this.p = p; }
     /**
      * Build this node element
-     *  @param { HTMLElement } p is parent of this node element
+     *  @param { HTMLElement } [p] - parent of this node element
      */
     build(p = undefined) {
         this.p = (p) ? p : this.p;
@@ -383,7 +382,7 @@ class Nel extends NodeElement{
     } /* //<-- method build ends here */
     /**
      * Mount to my parent
-     *  @param { HTMLElement } p is my parent
+     *  @param { HTMLElement } p - my parent
      */
     mount(p = undefined) {
         p = (p) ? p : this.p;
@@ -400,7 +399,7 @@ class Nel extends NodeElement{
     }
     /**
      * Unmount this node from my parent
-     * Onry remove DOM, no free
+     * Onry remove from DOM, no free
      */
     unmount() {
         if (! this.p.hasChildNodes(this._elm)) return this;
@@ -417,8 +416,8 @@ class Nel extends NodeElement{
     }
     /**
      * Update child with position
-     *  @param { Number } p is position number
-     *  @param { Nel | HTMLElement | String | Reference } c is child element
+     *  @param { Number } [p] - position number
+     *  @param { Nel | HTMLElement | String | Reference } [c] - child element
      */
     updateChild(p, c) {
         this.children[p] = c;
@@ -502,7 +501,7 @@ class Nel extends NodeElement{
     }
     /**
      * convert array to string for class attribute
-     *  @param { Array<String> } a is class attribute parameter
+     *  @param { Array<String> } [a] - class attribute parameter
      */
     #toClass(a) {
         return a.flat(Infinity).reduce((a, c) => {
@@ -520,16 +519,18 @@ const nel = (n, a = {}, ...cr) => {
 
 /**
  * @typedef { Object } DefaultOption
- * @property { Array<String> } class is class attribute(s)
- * @property { Object } style is style attribute(s)
+ * @property { Array<String> } [class] - class attribute(s)
+ * @property { Object } [style] - style attribute(s)
  */
 /**
+ *  @param { Array<String> } [c = []] - class attribute
+ *  @param { Object } [s = {}] - style attribute
  *  @returns { DefaultOption }
  */
-const defaultOption = () => {
+const defaultOption = (c = [], s = {}) => {
     return {
-        class: [],
-        style: {},
+        class: c,
+        style: s,
     }
 }
 
