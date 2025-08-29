@@ -1,3 +1,6 @@
+v0.102.0
+- Add a way to remove/add dom events to the Nel class.
+
 v0.101.1
 - Fix #17 An empty class is generated within the tag.
 - Add side-label style for LabelInput
