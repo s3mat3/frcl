@@ -136,6 +136,47 @@ function setEvent(s, e, l) {
     s.addEventListener(e, l);
 }
 /**
+ * @typedef { Object } EventHandlerPair
+ * @property { String } [en] - Event name
+ * @property { Function } [eh] - Event handler entry point
+ */
+/**
+ * @typedef { Array<EventHandlerPair> } EventHandlers
+ */
+/**
+ * Create EventHandlerPair and  push to EventHandlers.
+ *  @param { EventHandlers } [hs] - handler pair list.
+ *  @param { String } [en] - Event name.
+ *  @param { Function } [eh] - Event handler.
+ */
+function pushEventHandlers(hs, en, eh) {
+    hs.push({en, eh});
+}
+/**
+ * Add to EventListener by EventHandlers
+ *  @param { HTMLElement } [ctx] - Event source context.
+ *  @param { EventHandlers } [ehs] - add list.
+ */
+function addEvents(ctx, ehs) {
+    if (!ehs || !Array.isArray(ehs) || ehs.length === 0) return;
+    for (const p of ehs) {
+        if (typeof p.eh !== "function") continue;
+        ctx.addEventListener(p.en, p.eh);
+    }
+}
+/**
+ * Remove form EventListener by EventHandlers
+ *  @param { HTMLElement } [ctx] - Event source context.
+ *  @param { EventHandlers } [ehs] - remove list
+ */
+function removeEvents(ctx, ehs) {
+    if (!ehs || !Array.isArray(ehs) || ehs.length === 0) return;
+    for (const p of ehs) {
+        if (typeof p.eh !== "function") continue;
+        ctx.removeEventListener(p.en, p.eh);
+    }
+}
+/**
  * @typedef { Object } CurrentRegistering
  * @property { Object } [ctx] - context (Nel)
  * @property { Function } [cb] - call back for reaction
@@ -256,7 +297,6 @@ const _invoke = (fl) => {
         f();
     });
 }
-
 /**
  * @abstract NodeParts
  */
@@ -324,6 +364,8 @@ class Nel extends NodeElement{
     beforeUnmount = [];
     /** @public @type { FunctionList } functions object for unmounted */
     unmounted = [];
+    /** @public @type { EventHandlers } [handlers = []] - EventHandlerPair list */
+    handlers = [];
     /**
      * constructor
      *  @param { NType } [t] - this node type
@@ -387,6 +429,7 @@ class Nel extends NodeElement{
     mount(p = undefined) {
         p = (p) ? p : this.p;
         if (! p) this.p = p = $$("body"); // parent is body maybe error
+        removeEvents(this._elm, this.handlers);
         _invoke(this.beforeMount);
         const prev = this._elm;
         const now  = this.build(p);
@@ -395,6 +438,7 @@ class Nel extends NodeElement{
             ? this.p.replaceChild(now, prev)
             : this.p.insertAdjacentElement("beforeend", now);
         _invoke(this.mounted);
+        addEvents(this._elm, this.handlers);
         return this;
     }
     /**
@@ -403,6 +447,7 @@ class Nel extends NodeElement{
      */
     unmount() {
         if (! this.p.hasChildNodes(this._elm)) return this;
+        removeEvents(this._elm, this.handlers);
         _invoke(this.beforeUnmount);
         this.p.removeChild(this._elm)
         _invoke(this.unmounted);
@@ -545,6 +590,7 @@ export {
     element,
     emit,
     setEvent,
+    pushEventHandlers,
     SerialID,
     Reference,
     useRef,
