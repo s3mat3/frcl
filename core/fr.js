@@ -449,7 +449,7 @@ class Nel extends NodeElement{
                 e.setAttribute(k, d);
             } else if (k === "class") {
                 const d = (Array.isArray(v) && v.length) ? this.#toClass(v) : v
-                if (! d) continue;
+                if (! d || !(typeof d === "string")) continue;
                 e.setAttribute(k, d);
             } else {
                 e.setAttribute(k, v);
