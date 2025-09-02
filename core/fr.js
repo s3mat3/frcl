@@ -411,6 +411,7 @@ class Nel extends NodeElement{
      */
     build(p = undefined) {
         this.p = (p) ? p : this.p;
+        removeEvents(this._elm, this.handlers);
         _invoke(this.beforeCreate);
         this._elm = (this.type === NType.tagname) ? document.createElement(this.name)
             : (this.type === NType.tempLiteral) ? element(this.name)
@@ -420,6 +421,7 @@ class Nel extends NodeElement{
         /// append children
         this.#append();
         _invoke(this.created);
+        addEvents(this._elm, this.handlers);
         return this._elm;
     } /* //<-- method build ends here */
     /**
@@ -429,7 +431,6 @@ class Nel extends NodeElement{
     mount(p = undefined) {
         p = (p) ? p : this.p;
         if (! p) this.p = p = $$("body"); // parent is body maybe error
-        removeEvents(this._elm, this.handlers);
         _invoke(this.beforeMount);
         const prev = this._elm;
         const now  = this.build(p);
@@ -438,7 +439,6 @@ class Nel extends NodeElement{
             ? this.p.replaceChild(now, prev)
             : this.p.insertAdjacentElement("beforeend", now);
         _invoke(this.mounted);
-        addEvents(this._elm, this.handlers);
         return this;
     }
     /**
@@ -490,7 +490,7 @@ class Nel extends NodeElement{
             }
             if (k === "style") {
                 const d = (typeof v === "object") ? this.#toStyle(v) : v
-                if (! d) continue;
+                // if (! d) continue;
                 e.setAttribute(k, d);
             } else if (k === "class") {
                 const d = (Array.isArray(v) && v.length) ? this.#toClass(v) : v
