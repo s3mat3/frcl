@@ -1,3 +1,8 @@
+v0.103.0
+- Fix #19 Fix filter input
+- Add DataTable parts
+- Add utils for build application.
+
 v0.102.0
 - Add a way to remove/add dom events to the Nel class.
 
