@@ -1,0 +1,100 @@
+/**  For Fake Reactive Component oriented Library
+ * @file panel.scss
+ *
+ * @copyright © 2025 s3mat3
+ * This code is licensed under the MIT License, see the LICENSE file for details
+ * @author s3mat3
+ */
+@use "sass:math";
+@use "@styles/sass/global/vars" as *;
+
+/**
+ * 1   2   3   4   5   6   7   8   9   10  11  12
+ * |---+---+---+---+---+---+---+---+---+---+---+---| r1
+ * |                  .header-pane height=1row     |
+ * |---+---+---+---+---+---+---+---+---+---+---+---| r2
+ * |                                               |
+ * |                                               | r3
+ * |                                               |
+ * |                  .main-pane height=6row       | r4
+ * |                                               |
+ * |                                               | r5
+ * |                                               |
+ * |                                               | r6
+ * |                                               |
+ * |                                               | r7
+ * |                                               |
+ * |---+---+---+-----------------------------------| r8
+ * |                  .footer-pane height=1row     |
+ * |---+---+---+---+---+---+---+---+---+---+---+---|
+ */
+
+// for basic page layout
+.basic-page {
+    display: grid;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    grid-auto-rows: 12.5%;
+    // grid-gap: 0.1rem;
+    .header-pane {
+        grid-column: col-start / span 12;
+        grid-row: 1 / 2;
+        // border: solid 1px;
+    }
+    .main-pane {
+        grid-column: col-start / span 12;
+        grid-row: 2 / 8;
+        // border: solid 1px;
+    }
+    .footer-pane {
+        grid-column: col-start / span 12;
+        grid-row: 8 / 9;
+        // border: solid 1px;
+    }
+}
+/**
+ * 1   2   3   4   5   6   7   8   9   10  11  12
+ * |---+---+---+---+---+---+---+---+---+---+---+---| r1
+ * |                  .header-pane height=1row     |
+ * |---+---+---+---+---+---+---+---+---+---+---+---| r2
+ * |           |                                   |
+ * |           |                                   | r3
+ * |           |                                   |
+ * |           |      .main-pane height=6row       | r4
+ * |           |                                   |
+ * |           |                                   | r5
+ * |.side-pane |                                   |
+ * |height=6row|                                   | r6
+ * |           |                                   |
+ * |           |                                   | r7
+ * |           |                                   |
+ * |---+---+---+-----------------------------------| r8
+ * |                  .footer-pane height=1row     |
+ * |---+---+---+---+---+---+---+---+---+---+---+---|
+ */
+// for with side page layout
+.with-side-page {
+    display: grid;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    grid-auto-rows: 12.5%;
+    // grid-gap: 0.1rem;
+    .header-pane {
+        grid-column: col-start / span 12;
+        grid-row: 1 / 2;
+        // border: solid 1px;
+    }
+    .side-pane {
+        grid-column: col-start / span 3;
+        grid-row: 2 / 8;
+        // border: solid 1px;
+    }
+    .main-pane {
+        grid-column: 4 / span 9;
+        grid-row: 2 / 8;
+        // border: solid 1px;
+    }
+    .footer-pane {
+        grid-column: span 12;
+        grid-row: 8 / 9;
+        // border: solid 1px;
+    }
+}
