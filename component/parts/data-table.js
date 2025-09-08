@@ -45,7 +45,12 @@ class DataTable extends fr.NodeParts {
     /** @type { Array<fr.Nel> } */
     rows = [];
     sortState = {key: "", direction: ""};
+    /** @type { String } [bgcolor="pink"] - For row color when clicked row. */
     bgcolor = "pink";
+    /** @type { Integer } [selected = -1] - Number of selected row. */
+    #selected = -1;
+    /** @type { Boolean } [clicked = true] - Flag of clicked (for toggle). */
+    #clicked = true;
     /**
      *  @param { TableData }
      */
@@ -92,11 +97,13 @@ class DataTable extends fr.NodeParts {
             if (this.props.nod === index) {
                 break;
             }
+            /** create table row element */
             const tr = fr.nel("tr",
-                             {},
-                             ...this.visibleColumns.map(conf => {
-                                 return fr.nel("td", {}, String(row[conf.field]));
-                             }));
+                              {'data-index': index},
+                              ...this.visibleColumns.map(conf => {
+                                  return fr.nel("td", {}, String(row[conf.field]));
+                              }));
+            /** doble click handler */
             const dh = () => {
                 fr.emit("fr:table-row-dblclick", {
                     confList: this.props.confList,
@@ -104,14 +111,26 @@ class DataTable extends fr.NodeParts {
                     index: index,
                 });
             }
+            /** single click handler */
             const sh = () => {
-                this.#removeBackground();
-                if (! tr.attrs.hasOwnProperty("style")) {
-                    tr.attrs["style"] = {background: this.bgcolor};
-                } else {
-                    tr.attrs.style["background"] = this.bgcolor;
+                this.#removeSelectedColor(this.#selected);
+                const idx = tr.element.dataset.index ?? -1;
+                if (this.#selected === idx) { // clicked same prev row
+                    let x = this.#clicked;
+                    this.#clicked = !this.#clicked;
+                    if (x) {
+                        fr.emit("fr:table-row-dselected", {
+                            confList: this.props.confList,
+                            data: row,
+                            index: index,
+                        });
+                        return;
+                    }
+                } else { // click another prev row
+                    this.#clicked = true;
                 }
-                tr.updateAttributes();
+                tr.element.style.background = this.bgcolor;
+                this.#selected = idx;
                 fr.emit("fr:table-row-selected", {
                     confList: this.props.confList,
                     data: row,
@@ -121,7 +140,7 @@ class DataTable extends fr.NodeParts {
             tr.handlers.push({en: "dblclick", eh: dh});
             tr.handlers.push({en: "click", eh: sh})
             this.rows[index] = tr;
-            // update conuter
+            // update index conuter
             ++index;
         }
     }
@@ -135,13 +154,9 @@ class DataTable extends fr.NodeParts {
 
         fr.emit('fr:table-col-sort', { sort_key: this.sortState.key, direction: this.sortState.direction });
     }
-    #removeBackground() {
-        for (let r of this.rows) {
-            if (! r.attrs.hasOwnProperty("style") || ! r.attrs.style.hasOwnProperty("background")) continue;
-            delete r.attrs.style["background"];
-            // console.log(r.attrs);
-            r.updateAttributes();
-        }
+    #removeSelectedColor(rnum) {
+        if (rnum < 0) return;
+        this.rows[rnum].element.style.background = null;
     }
     /**
      * Updates the table with new data.
