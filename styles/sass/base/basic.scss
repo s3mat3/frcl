@@ -74,6 +74,14 @@ pre {
 .row {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+    justify-items: center;
+    align-items: center;
+    .upper {
+        grid-row: 1 / 2;
+    }
+    .lower {
+        grid-row: 2 / 3;
+    }
     // for 12 column
     @for $i from 1 through 12 {
         .col-#{$i} {
