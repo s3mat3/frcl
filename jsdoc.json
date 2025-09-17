@@ -1,0 +1,13 @@
+{
+    "plugins": ["plugins/markdown"],
+    "source": {
+        "include": ["./core"],
+        "includePattern":".+\\.js(doc|x)?$"
+    },
+    "opts":{
+        "destination": "./build/docs"
+    },
+    "markdown": {
+        "excludeTags":["author"]
+    }
+}

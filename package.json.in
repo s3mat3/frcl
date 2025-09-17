@@ -27,9 +27,11 @@
         "dbuild": "vite build --mode development",
         "preview": "vite preview",
         "test": "vitest run --printConsoleTrace=true",
-        "dtest": "vitest watch --printConsoleTrace=true"
+        "dtest": "vitest watch --printConsoleTrace=true",
+        "docs": "jsdoc --configure ./jsdoc.json --verbose"
     },
     "devDependencies": {
+        "jsdoc": "^4.0.4",
         "jsdom": "^26.0.0",
         "json-server": "^1.0.0-beta.3",
         "material-symbols": "^0.29.2",
