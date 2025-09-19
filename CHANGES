@@ -1,3 +1,15 @@
+v0.105.0
+- Add Pagination parts
+- Change the way the page looks.
+- Progress #22 Update README
+- Merge branch 'main' into develop
+- Version bump to 0.104.0
+- Add de-select action in a DataTable.
+- Version bump to 0.104.0
+- Add de-select action in a DataTable.
+- Version bump to 0.104.0
+- Add de-select action in a DataTable.
+
 v0.104.0
 - Add de-select action in a DataTable.
 - Add page layout for app
