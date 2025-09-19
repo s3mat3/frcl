@@ -21,6 +21,7 @@ $ cmake --build build -- run
   * examples/sc0 => message dialogs
   * examples/sc1 => editable dialog
   * examples/sc2 => simple table
+  * examples/sc3 => editable CRUD table planning imagee
 * make target "build" build release mode library in "dist" directory
 * make target "develop" build debug mode library in "dist" directory
 * make target "unit" run test

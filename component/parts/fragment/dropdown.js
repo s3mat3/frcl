@@ -21,8 +21,8 @@ import * as fr from "../../../core/fr";
 const dropdownOption = (n = "no-name", c = [], s = {}) => {
     return {
         name: n,
-        class: c,
-        style: s,
+        class: [ ...c ],
+        style: { ...s },
     };
 }
 
@@ -78,6 +78,7 @@ class Dropdown extends fr.Nel {
         this._list = d;
         this.id = "select";
         this.selected = this._cnt;
+        this.mounted.push(() => {this.selected = this._cnt;});
     }
 
     get name_attr() {
@@ -116,6 +117,10 @@ class Dropdown extends fr.Nel {
         (m) ? this._elm.serAttribute("required", true)
             : this._elm.removeAttribute("required");
     }
+
+    // handleChanged() {
+    //     fr.emit("fr:dropdown-changed", {index: this._cnt, k:})
+    // }
 }
 
 /**

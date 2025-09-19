@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Author: s3mat3,
+                CRUD table planning image for FRCL example">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <title>CRUD table planning</title>
+  </head>
+  <body>
+    <div id="app" class="basic-page" style="width: 100vw; height: 100vh;">
+      <!-- Header -->
+      <div class="header-pane">
+        <p>
+          <span>CRUD table planning image</span>
+        </p>
+      </div>
+      <!-- Main  -->
+      <div class="main-pane">
+        <div class="basic-main-contents" style="width: 100%; height: 100%; background: pink;">
+          <div class="contents-header row">
+            <div class="col-1">
+              <button class="is-normal is-primary">
+                <span>
+                    Add
+                </span>
+              </button>
+            </div>
+            <div class="col-1"></div>
+            <div id="num_disp" class="col-1">
+            </div>
+            <div class="col-1"></div>
+            <div id="test_filter" class="col-4" style="display: inline-block">
+            </div>
+          </div>
+          <div class="contents">
+            <div id="data_table" style="mergin: auto;">
+            </div>
+            <div id="edit_dialog">
+            </div>
+          </div>
+          <div id="number_area" class="contents-footer row">
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <div class="footer-pane row">
+        <div id="home_button" style="grid-column: 1/span 1;">
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/examples/sc3/main.js"></script>
+  </body>
+</html>
