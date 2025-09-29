@@ -1,10 +1,14 @@
-/** @ts-check
- * @file fr.js
+// @ts-check
+/*!
+ * frcl is Fake Reactivity Component oriented Libray
+ * Copyright (c) 2025 s3mat3
+ * Licensed under the MIT License, see the LICENSE file for details
+ */
+/**
+ * @file frcl is Fake Reactivity Component oriented Libray
  *
  * @copyright © 2025 s3mat3
  * This code is licensed under the MIT License, see the LICENSE file for details
- *
- * @brief
  *
  * @author s3mat3
  */
@@ -27,7 +31,7 @@ class SerialID {
     }
     get value() { return this.#value.count; }
 }
-const FR_CID = new SerialID(1000);
+const _FR_CID = new SerialID(1000);
 ////////////////////////////////////////////////////////////////////
 // globals
 ////////////////////////////////////////////////////////////////////
@@ -35,17 +39,32 @@ const FR_CID = new SerialID(1000);
  * window.$fr_cid (read only)
  * This global is readed per increment number as string
  */
-Object.defineProperty(window, "$fr_cid", {
+Object.defineProperty(globalThis, "$fr_cid", {
     get() {
-        return FR_CID.value;
+        return _FR_CID.value;
     },
     // no setter
 });
-window.__proto__.$nop = () => {};
-window.__proto__.$d = window.document;
-window.__proto__.$$ = $d.querySelector.bind(document);
-window.__proto__.$a = $d.querySelectorAll.bind(document);
-window.__proto__.$toast = (m, c = "is-info", t = 3) => {
+
+globalThis.$nop = () => {};
+globalThis.$d = window.document;
+/**
+ *  @param { String } s - Selector name.
+ *  @returns { Element | Null }
+ */
+globalThis.$$ = (s) => document.querySelector(s);
+/**
+ *  @param { String } ss - Selector name.
+ *  @returns { NodeList | Null }
+ */
+globalThis.$a = (ss) => document.querySelectorAll(ss);
+/**
+ * Toast notification (popup)
+ *  @param { String } [m = "hello world"] - Message displayed on the toast.
+ *  @param { String } [c = "is-info"] - Class selector name that determines the background color.
+ *  @param { Number } [t = 3] - Display time (in seconds).
+ */
+globalThis.$toast = (m = "hello world", c = "is-info", t = 3) => {
     t = (t < 2) ? 2 : t;
     const to = t * 1000;
     const pan = document.createElement("div");
@@ -68,9 +87,9 @@ window.__proto__.$toast = (m, c = "is-info", t = 3) => {
  * Should use the entity name or entity number when you want to output any of these reserved characters.
  *  @see https://www.html.am/reference/html-special-characters.cfm
  *
- *  @param {String} [target] - string for output web browser
+ *  @param { String } [target] - String for output web browser.
  */
-function escapeHtmlSpecialChars(target) {
+function escapeHtmlSpecialChars(target = "") {
     return target.replace(/[\'\"&<>]/g, (match) => {
         const escapes = {
             '\'': '&#x27;',
@@ -84,37 +103,45 @@ function escapeHtmlSpecialChars(target) {
 }
 /**
  * Build element from HTML markup string
- *  @param { String } [h] - html markup string
- *  @returns { HTMLElement }
+ *  @param { String } [h] - HTML markup string.
+ *  @returns { Element }
  */
-function buildElement(h) {
+function buildElement(h = "<div></div>") {
     const e = document.createElement('template');
     e.insertAdjacentHTML('afterbegin', h);
-    return e.firstElementChild;
+    return e.firstElementChild ?? e;
 }
+
+/**
+ * @template T
+ * @typedef {(string | ((props: T) => string))[]} Interpolation
+ */
+
 /**
  * Build html element from template literal. (Using taged template literal)
  *
  * This idea was referenced in the "Escape HTML Strings" section of'https://jsprimer.net/use-case/ajaxapp/display/'.
  *  @caution All placeholder variables included html special chars are escaped
  *  @usage element`<html-tag>${some_variable} | another-some-tags</html-tag>`;
- *  @param { String } [s] - string as tags
- *  @param { Array<String> } [vs] - string array from ${some_variable}
- *  @returns { HTMLElement }
+ *
+ *  @template T
+ *  @param { Array<String> } s - String as tags.
+ *  @param { ...(function(T): String) } vs - Rest param(s) from ${some_variable}.
+ *  @returns { Element }
  */
-function element(s, ...vs) {
+function element(s = [], ...vs) {
     const html = s.reduce((acc, current, index) => {
-        const v = vs[index - 1];
-        return (typeof v === 'string') ? acc + escapeHtmlSpecialChars(v) + current
-            : acc + String(v) + current;
+            const v = vs[index - 1];
+            return (typeof v === 'string') ? acc + escapeHtmlSpecialChars(v) + current
+                : acc + String(v) + current;
     });
     return buildElement(html);
 } /* //<-- function element ends here */
 /**
  * Emit custom event with context
- *  @param { String } [n] - name as event trigger
- *  @param { Any } [d] - detail of event (event data)
- *  @param { HTMLElement } [c = document] - event source element named context
+ *  @param { String } [n] - Name as event trigger.
+ *  @param { any } [d] - Detail of event (event data).
+ *  @param { EventTarget } [c = document] - Event source element named context.
  */
 function emit(n, d, c = document) {
     if (! n) return;
@@ -128,8 +155,8 @@ function emit(n, d, c = document) {
 /**
  * Remove and add event listener
  *  @param { HTMLElement } s - event souce (context)
- *  @param { String } e - event name
- *  @param { Function } l - function of event listener
+ *  @param { keyof HTMLElementEventMap } e - event name
+ *  @param { (this: HTMLElement,ev: Event) => any } l - function of event listener
  */
 function setEvent(s, e, l) {
     s.removeEventListener(e, l);
@@ -137,8 +164,8 @@ function setEvent(s, e, l) {
 }
 /**
  * @typedef { Object } EventHandlerPair
- * @property { String } [en] - Event name
- * @property { Function } [eh] - Event handler entry point
+ * @property { keyof HTMLElementEventMap } [en] - Event name
+ * @property { (this: HTMLElement,ev: Event) => any } [eh] - Event handler entry point
  */
 /**
  * @typedef { Array<EventHandlerPair> } EventHandlers
@@ -146,53 +173,58 @@ function setEvent(s, e, l) {
 /**
  * Create EventHandlerPair and  push to EventHandlers.
  *  @param { EventHandlers } [hs] - handler pair list.
- *  @param { String } [en] - Event name.
- *  @param { Function } [eh] - Event handler.
+ *  @param { keyof HTMLElementEventMap } [en] - Event name.
+ *  @param { (this: HTMLElement,ev: Event) => any } [eh] - Event handler.
  */
-function pushEventHandlers(hs, en, eh) {
+function pushEventHandlers(hs = [], en, eh) {
     hs.push({en, eh});
 }
 /**
  * Add to EventListener by EventHandlers
- *  @param { HTMLElement } [ctx] - Event source context.
+ *  @param { Element } [ctx] - Event source context.
  *  @param { EventHandlers } [ehs] - add list.
  */
 function addEvents(ctx, ehs) {
-    if (!ehs || !Array.isArray(ehs) || ehs.length === 0) return;
+    if (!ctx || !ehs || !Array.isArray(ehs) || ehs.length === 0) return;
     for (const p of ehs) {
-        if (typeof p.eh !== "function") continue;
+        if (typeof p.en !== "string" || typeof p.eh !== "function") continue;
         ctx.addEventListener(p.en, p.eh);
     }
 }
 /**
  * Remove form EventListener by EventHandlers
- *  @param { HTMLElement } [ctx] - Event source context.
+ *  @param { Element } [ctx] - Event source context.
  *  @param { EventHandlers } [ehs] - remove list
  */
 function removeEvents(ctx, ehs) {
-    if (!ehs || !Array.isArray(ehs) || ehs.length === 0) return;
+    if (!ctx || !ehs || !Array.isArray(ehs) || ehs.length === 0) return;
     for (const p of ehs) {
-        if (typeof p.eh !== "function") continue;
+        if (typeof p.en !== "string" || typeof p.eh !== "function") continue;
         ctx.removeEventListener(p.en, p.eh);
     }
 }
 /**
  * @typedef { Object } CurrentRegistering
- * @property { Object } [ctx] - context (Nel)
- * @property { Function } [cb] - call back for reaction
+ * @property { Object } [ctx] - Context (Nel)
+ * @property { Function } [cb] - Call back for reaction
  */
 /** @type { CurrentRegistering } @private in this file only */
-let _current_registering = undefined;
+let _current_registering = {};
 ////////////////////////////////////////////////////////////////////
 /**
  * @interface NodeElement
  */
 class NodeElement {
-    get parent() {}
-    set parent(p) {}
-    get element() {}
-    build(p) {}
-    mount(p) {}
+    /** Build node element
+     *  @param { Element } _p - Parent node
+     *  @returns { Element | null }
+     */
+    build(_p) {return null;}
+    /** Mount to parent node
+     *  @param { Element } _p - Parent node
+     *  @returns { NodeElement }
+     */
+    mount(_p) {return this;}
     unmount() {}
     update() {}
 }
@@ -200,12 +232,16 @@ class NodeElement {
  *
  */
 class Reference {
+    /** @type { any}  */
     #val = undefined;
+    /** @type { any}  */
     #old = undefined;
+    /** @type { Boolean }*/
     _reactive = true;
-    _listeners = undefined;
+    /** @type { Map }*/
+    _listeners;
     /**
-     *  @param { Any } [iv] - initial value. not a initial vector www...
+     *  @param { any } [iv] - initial value. not a initial vector \(^_^)/
      */
     constructor(iv) {
         this.#val = this.#old = iv;
@@ -220,7 +256,7 @@ class Reference {
     }
     /** getter */
     get value() {
-        if (_current_registering) {
+        if (! isEmptyObj(_current_registering)) {
             // console.log("register", _current_registering);
             this._listeners.set(_current_registering.ctx, _current_registering.cb);
         }
@@ -237,28 +273,42 @@ class Reference {
     }
 }
 /**
- * @typedef { Object } RefKey
- * @property { Reference } [r] - instance of Reference
- * @property { String } [k] - key of r.value if value Object
+ * RefKey
  */
+class RefKey {
+    r;
+    k;
+    /**
+     *  @param { Reference } [t] - Tracking object.
+     *  @param { String } [k] - Key
+     */
+    constructor(t, k) {
+        this.r = t;
+        this.k = k;
+    }
+}
+
 /**
  * @private
- *  @param { RefKey } [r] - tracking target
- *  @param { NodeElement } [n] - implements NodeElement object
- *  @returns { Reference.value }
+ *  @param { RefKey } [r] - Tracking target.
+ *  @param { NodeElement } [n] - Implements NodeElement object.
+ *  @returns { any } - Reference.value | undefined
  */
 const _should_registering = (r, n) => {
     let v = undefined;
+    if (!r || !n) return;
     // console.log(r);
     _current_registering = {ctx: n, cb: n.update};
-    v = (r.k) ? r.r.value[r.k] : r.r.value
-    _current_registering = undefined;
+    if (r.r && r.r.value) {
+        v = (r.k) ? r.r.value[r.k] : r.r.value;
+    }
+    _current_registering = {};
     return v;
 }
 /**
- *  @param { Reference } [t] - tracking object
- *  @param { String } [k] - key
- *  @returns { RefKey }  packed object
+ *  @param { Reference } [t] - Tracking object.
+ *  @param { String } [k] - Key
+ *  @returns { RefKey }  Packed object
  *  @example
  *  const x = new Refarence({name: "hoge", age: 18});
  *  options.name = useRef(x, "name");
@@ -266,16 +316,16 @@ const _should_registering = (r, n) => {
  *  x = {name: "fuga", age: "98"};
  */
 const useRef = (t, k = "") => {
-    return {r: t, k: k};
+    return new RefKey(t, k);
 }
 /** for Nel class type property
- * @typedef { Object } NType
+ * @enum { Number }
  * @property { Number } tagname Nel class name property - string as tagname
  * @property { Number } element Nel class name property - HTMLElement
  * @property { Number } tempLiteral Nel class name property - string as html template literal
- * Other property - not implement now. @see class Nel build method
+ * Other property - not implement now. @see Nel class build method
  */
-const NType = {
+const NType = Object.freeze({
     tagname     : 0,
     element     : 1,
     attribute   : 2,
@@ -283,7 +333,7 @@ const NType = {
     cdata       : 4,
     comment     : 8,
     tempLiteral : 1000,
-}
+});
 /**
  * @typedef { Array<Function> } FunctionList
  */
@@ -310,8 +360,11 @@ class NodeParts {
     /** @type { FunctionList } unmounted */
     unmounted = [];
     /** @type { NodeElement } */
-    _node = undefined;
+    _node;
     get node() {return this._node;}
+    /**
+     *  @param { Element } p - Parent element node.
+     */
     mount(p) {
         _invoke(this.beforeMount);
         this._node.mount(p);
@@ -327,8 +380,9 @@ class NodeParts {
 }
 /**
  * @typedef { Object } Attrs
- * @property { Object | String } [style] - tag attribute of style
- * @property { Array<String> | String } [class] - tag attribute of class
+ * @property { String } [id] - Tag attribute of id.
+ * @property { Object | String } [style] - Tag attribute of style.
+ * @property { Array<String> | String } [class] - Tag attribute of class.
  */
 /**
  * Node ELement class named Nel
@@ -336,22 +390,31 @@ class NodeParts {
  *  @implements { NodeElement }
  */
 class Nel extends NodeElement{
-    /** @private @type { String } [id = ""] - this node ID (number string) */
+    /** This node ID (number string).
+     * @type { String }
+     */
     #nid = "";
-    /** @protected @type { HTMLElement } [_elm = udefined] - this node cache */
-    _elm = undefined;
-    /** @public @type { NType } [type = NType.tagname] - node type  */
-    type = NType.tagname;
-    /** @public @type { String } [name = ""] - tag name */
+    /** @protected
+     * This node cache
+     * @type { Element }
+     */
+    _elm;
+    /** @public
+     * Node type.
+     * @type { NType }
+     */
+    ntype = NType.tagname;
+    /** @public
+     * Tag name.
+     * @type { String | Element }
+     */
     name = ""
     /** @public @type { Attrs } */
-    attrs = {
-        style: {}
-    };
-    /** @public @type { Array <Nel | HTMLElement | String | Reference> } children - this node children */
+    attrs = { id: "" };
+    /** @public @type { Array <Nel | Element | String | RefKey> } */
     children = [];
-    /** @public @type { HTMLElement } p - this node parent */
-    p = undefined;
+    /** @public @type { Element | null } */
+    p = null;
     /** @public @type { FunctionList } functions object for befor create */
     beforeCreate = [];
     /** @public @type { FunctionList } functions object for created */
@@ -367,16 +430,16 @@ class Nel extends NodeElement{
     /** @public @type { EventHandlers } [handlers = []] - EventHandlerPair list */
     handlers = [];
     /**
-     * constructor
-     *  @param { NType } [t] - this node type
-     *  @param { String } [n] - name of tag
-     *  @param { Attrs } [a = {}] - attribute of this node
-     *  @param { Node | HTMLElement | Reference |  } [cr] - children of this node 
+     * @constructor
+     *  @param { NType } [t = NType.tagname] - This node type.
+     *  @param { String } [n = "div"] - Name of tag.
+     *  @param { Attrs } [a = {}] - Attribute of this node.
+     *  @param { ...Nel | Element | String | RefKey } cr - Children of this node.
      */
-    constructor(t, n, a = {}, ...cr) {
+    constructor(t = NType.tagname, n = "div", a = {}, ...cr) {
         super();
-        this.#nid = window.$fr_cid ?? "1000";
-        this.type = t;
+        this.#nid = $fr_cid ?? "1000";
+        this.ntype = t;
         this.name = n;
         this.attrs = { ...a };
         this.children = [ ...cr ];
@@ -393,29 +456,37 @@ class Nel extends NodeElement{
         this.attrs.id = `${name}_${this.#nid}`;
         (this._elm) ? this._elm.setAttribute("id", this.attrs.id) : $nop();
     }
+    /**
+     *  @returns { String | undefined }
+     */
     get id() {return this.attrs.id;}
     /**
      * element getter
-     *  @returns {HTMLElement}
+     *  @returns {Element | undefined }
      */
     get element() { return this._elm; }
     /**
      * parent getter
-     *  @returns {HTMLElement} this node parent 
+     *  @returns { Element | null } p - This node parent (mount target).
      */
     get parent() { return this.p; }
     set parent(p) { this.p = p; }
     /**
      * Build this node element
-     *  @param { HTMLElement } [p] - parent of this node element
+     *  @param { Element | null } [p = undefined] - Parent for this node mount.
+     *  @returns { Element | null }
      */
-    build(p = undefined) {
+    build(p = null) {
         this.p = (p) ? p : this.p;
         removeEvents(this._elm, this.handlers);
         _invoke(this.beforeCreate);
-        this._elm = (this.type === NType.tagname) ? document.createElement(this.name)
-            : (this.type === NType.tempLiteral) ? element(this.name)
-            : (this.name === NType.element) ? this.name : document.createElement("template");
+        if (this.ntype === NType.tagname && typeof this.name === "string") {
+            this._elm = document.createElement(this.name);
+        } else if (this.ntype == NType.element) {
+            this._elm = (this.name instanceof Element) ? this.name : document.createElement("template");
+        } else {
+            this._elm = document.createElement("template");
+        }
         /// set attribute(s)
         this.updateAttributes();
         /// append children
@@ -426,18 +497,19 @@ class Nel extends NodeElement{
     } /* //<-- method build ends here */
     /**
      * Mount to my parent
-     *  @param { HTMLElement } p - my parent
+     *  @param { Element | null } [p = undefined] - My parent.
+     *  @returns { NodeElement }  
      */
-    mount(p = undefined) {
-        p = (p) ? p : this.p;
-        if (! p) this.p = p = $$("body"); // parent is body maybe error
+    mount(p = null) {
+        this.p = (p) ? p : $$("body");
         _invoke(this.beforeMount);
         const prev = this._elm;
         const now  = this.build(p);
-        // somecase p.hasChildNodes(prev) === true but prev.parentNode === null why?
-        (prev && this.p.hasChildNodes(prev) && prev.parentNode)
-            ? this.p.replaceChild(now, prev)
-            : this.p.insertAdjacentElement("beforeend", now);
+        if (now) {
+            (prev && this.p?.contains(prev) && prev.parentNode)
+                ? this.p.replaceChild(now, prev)
+                : this.p?.insertAdjacentElement("beforeend", now);
+        }
         _invoke(this.mounted);
         return this;
     }
@@ -446,7 +518,9 @@ class Nel extends NodeElement{
      * Onry remove from DOM, no free
      */
     unmount() {
-        if (! this.p.hasChildNodes(this._elm)) return this;
+        if (! this._elm) return this;
+        // if (! this.p?.hasChildNodes(this._elm)) return this;
+        if (! this.p?.contains(this._elm)) return this;
         removeEvents(this._elm, this.handlers);
         _invoke(this.beforeUnmount);
         this.p.removeChild(this._elm)
@@ -454,7 +528,7 @@ class Nel extends NodeElement{
         return this;
     }
     /**
-     *
+     * Update dom (remount)
      */
     update() {
         return this.mount(this.p);
@@ -462,9 +536,10 @@ class Nel extends NodeElement{
     /**
      * Update child with position
      *  @param { Number } [p] - position number
-     *  @param { Nel | HTMLElement | String | Reference } [c] - child element
+     *  @param { Nel | Element | String | RefKey } [c] - child element
      */
-    updateChild(p, c) {
+    updateChild(p = 0, c) {
+        if (! this.children.length || ! c) return;
         this.children[p] = c;
     }
     /**
@@ -482,12 +557,6 @@ class Nel extends NodeElement{
                 e.setAttribute(k, v);
                 continue;
             }
-            if (v.r instanceof Reference) {
-                if (! v) continue;
-                let nv = _should_registering(v, this);
-                e.setAttribute(k, nv);
-                continue;
-            }
             if (k === "style") {
                 const d = (typeof v === "object") ? this.#toStyle(v) : v
                 // if (! d) continue;
@@ -497,6 +566,14 @@ class Nel extends NodeElement{
                 if (! d || !(typeof d === "string")) continue;
                 e.setAttribute(k, d);
             } else {
+                if (! v) continue;
+                if (v && typeof v === "object") {
+                    if (v?.r instanceof Reference) {
+                        let nv = _should_registering(v, this);
+                        e.setAttribute(k, nv);
+                        continue;
+                    }
+                }
                 e.setAttribute(k, v);
             }
         }
@@ -507,25 +584,24 @@ class Nel extends NodeElement{
     #append() {
         const cd = this.children.flat(Infinity);
         for (const c of cd) {
-            if (! c || c.length === 0) continue;
+            if (! c) continue;
             if (typeof c === "object") {
                 if (c instanceof Nel) {
-                    this._elm.insertAdjacentElement("beforeend", c.build(this._elm));
-                    // this._elm.append(c.build(this._elm));
+                    let e = c.build(this._elm);
+                    if (! e) continue;
+                    this._elm.insertAdjacentElement("beforeend", e);
                 } else if (c instanceof NodeParts) {
-                    this._elm.insertAdjacentElement("beforeend", c.node.build(this._elm));
-                    // this._elm.append(c.node.build(this._elm));
-                } else if (c.r instanceof Reference) {
+                    let e = c.node.build(this._elm);
+                    if (! e) continue;
+                    this._elm.insertAdjacentElement("beforeend", e);
+                } else if (c instanceof RefKey) {
                     let nc = _should_registering(c, this);
                     this._elm.insertAdjacentText("beforeend", nc);
-                    // this._elm.append(c);
                 }  else if (c instanceof HTMLElement) {
                     this._elm.insertAdjacentElement("beforeend", c);
-                    // this._elm.append(c);
                 }
             } else if (typeof c === "string") {
                 this._elm.insertAdjacentText("beforeend", c);
-                // this._elm.append(c);
             } else {
                 console.error("what child element?", c);
                 continue;
@@ -535,10 +611,12 @@ class Nel extends NodeElement{
     }
     /**
      * convert object to string for style attribute
+     *  @param { Object } o - Style attribute object.
+     *  @returns { String }
      */
     #toStyle(o) {
         return Object.entries(o).map(([k, v]) => {
-            if (v.r instanceof Reference) {
+            if (v?.r instanceof Reference) {
                 v = _should_registering(v, this);
             }
             return `${k}: ${v};`
@@ -546,19 +624,26 @@ class Nel extends NodeElement{
     }
     /**
      * convert array to string for class attribute
-     *  @param { Array<String> } [a] - class attribute parameter
+     *  @param { Array<String | Object> } [a] - Class attributes.
+     *  @returns { String }
      */
-    #toClass(a) {
-        return a.flat(Infinity).reduce((a, c) => {
-            if (c.r instanceof Reference) {
-                c = _should_registering(c, this);
+    #toClass(a = []) {
+        return a.flat(Infinity).reduce((acc, cv) => {
+            if (cv && typeof cv === "object") {
+                if (cv?.r instanceof Reference) {
+                    cv = _should_registering(cv, this);
+                }
             }
-            return `${a} ${c}`;
+            return `${acc} ${cv}`;
         });
     }
 } /* //<-- class Nel ends here */
-
-const nel = (n, a = {}, ...cr) => {
+/**
+ *  @param { String } [n = "div"] - Name of tag.
+ *  @param { Attrs } [a = {}] - Attribute of this node.
+ *  @param { ...Nel | Element | String | RefKey } cr - Children of this node.
+ */
+const nel = (n = "div", a = {}, ...cr) => {
     return new Nel(NType.tagname, n, a, ...cr);
 } /* //<-- function nel ends here */
 
@@ -600,6 +685,6 @@ export {
     nel,
     NodeParts,
     defaultOption,
-}
+};
 
 /* //<-- fr.js ends here*/
