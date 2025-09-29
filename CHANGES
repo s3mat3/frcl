@@ -1,3 +1,7 @@
+v0.105.1
+- Improve to pass ts-check in core/fr.js
+- Progress #15 Add editabble CRUD table component
+
 v0.105.0
 - Add Pagination parts
 - Change the way the page looks.
