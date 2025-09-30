@@ -1,3 +1,6 @@
+v0.105.2
+- Improve to pass ts-check in core/
+
 v0.105.1
 - Improve to pass ts-check in core/fr.js
 - Progress #15 Add editabble CRUD table component
