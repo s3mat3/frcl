@@ -1,36 +1,64 @@
+// @ts-check
+/*!
+ * The misc.js is part of Fake Reactivity Component oriented Libray
+ * Copyright (c) 2025 s3mat3
+ * Licensed under the MIT License, see the LICENSE file for details
+ */
 /**
- * @file reactive.js
+ * @file Fake reactive system...www...(:-)
  *
  * @copyright © 2025 s3mat3
  * This code is licensed under the MIT License, see the LICENSE file for details
  *
- * @brief Fake reactive system...www...(:-)
- *
- * This idea from https://blog.risingstack.com/writing-a-javascript-framework-data-binding-es6-proxy/
+ * This idea from
+ * @see https://blog.risingstack.com/writing-a-javascript-framework-data-binding-es6-proxy/
  *
  * @author s3mat3
  */
 'use strict';
 
 import { isMatchType } from "./misc";
-// var FR = FR || {};
-// (function () {
-// })();
 
+class ReactionArg {
+    /** Action parameter "set" or "del"
+       @type { String } */
+    #a = "set";
 
-/** @private @type { WeakMap <Object, Map<String, Set<Function> } */
+    constructor(a = "set") {
+        this.#a = a;
+    }
+
+    get a() {return this.#a;}
+}
+
+/**
+ * ReactionType is callback function.
+ * @typedef { function(ReactionArg | void): void } ReactionType;
+ */
+
+/** Listeners map
+ *  @package
+ *  @type { WeakMap<Object, Map<String, Set<ReactionType>>> }
+ */
 const _reactions_list_map = new WeakMap();
-/** @private @type { Function } _current_reaction is */
-let _current_reaction = undefined;
 
+/** ReactionType holder.
+ *  @package
+ *  @type { ReactionType | null } */
+let _current_reaction = null;
 
+/** Flag of microtask
+ *  @package
+ *  @type { Boolean }*/
 let _is_pending = false;
-/** @private Invoke reaction (Notify)
+
+/** Invoke reaction (Notify)
+ *  @package
  *  @param { Object } t is monitored object
  *  @param { String } k is monitored property key(name)
- *  @param { Object } d is notify detail argument
+ *  @param { ReactionArg } d is notify detail argument
  */
-function _invoke_reactions(t, k, d = {}) {
+function _invoke_reactions(t, k, d) {
     const reactionsList = _reactions_list_map.get(t);
     // console.log(reactionsList, t);
     if (reactionsList) {
@@ -47,10 +75,11 @@ function _invoke_reactions(t, k, d = {}) {
          });
     }
 }
-/** @private Register reaction
+/** Register reaction
+ *  @package
  *  @param { Object } t is target object
  *  @param { String } k is key name(property name)
- *  @param { Function } a is reaction in the monitored when change
+ *  @param { ReactionType } a is reaction in the monitored when change
  */
 function _register_reaction(t, k, a) {
     let reactionsList = _reactions_list_map.get(t);
@@ -66,14 +95,18 @@ function _register_reaction(t, k, a) {
 
 /**
  * Monitor
- *  @param { Object | Primitive }  o is monitor target object
+ *  @param { Object | Array }  o is monitor target object
  *  @returns { Proxy }
  */
 function monitor(o) {
     const to = (isMatchType(["Array", "Object"], o)) ? o : { value: o };
     return new Proxy(to, {
         // trap handlers attach 3 methods (set, get deleteProperty)
-        /** getter trap */
+        /** getter trap
+         *  @param { Object | Array } t - Monitored target object.
+         *  @param { String } k - Object key.
+         *  @param { any } r - Reciver.
+         */
         get(t, k, r) {
             const rv = Reflect.get(t, k, r);
             if (_current_reaction) {
@@ -82,7 +115,11 @@ function monitor(o) {
             if (rv && isMatchType(["Object", "Array"], rv)) return monitor(rv)
             return rv;
         },
-        /** setter trap */
+        /** setter trap
+         *  @param { Object | Array } t - Monitored target object.
+         *  @param { String } k - Object key.
+         *  @param { any } r - Reciver.
+         */
         set(t, k, v, r) {
             const ov = Reflect.get(t, k, r);
             // no update when same old value and new value
@@ -93,33 +130,36 @@ function monitor(o) {
             }
             const rv = Reflect.set(t, k, v, r);
             // invoke reaction when update success
-            if (rv) {_invoke_reactions(t, k, {a: "set"});}
+            if (rv) {_invoke_reactions(t, k, new ReactionArg("set"));}
             return rv;
         },
-        /** deleter trap */
-        deleteProperty(t, k, r) {
-            const rv = Reflect.deleteProperty(t, k, r);
+        /** deleter trap
+         *  @param { Object | Array } t - Monitored target object.
+         *  @param { String } k - Object key.
+         */
+        deleteProperty(t, k) {
+            const rv = Reflect.deleteProperty(t, k);
             if (rv) {
-                _invoke_reactions(t, k, {a:"del"});
+                _invoke_reactions(t, k, new ReactionArg("del"));
                 const n = _reactions_list_map.get(t);
                 if (! n) return rv;
                 const reactions = n.get(k);
                 reactions?.clear();
-                n.delete(k); // delete 
+                n.delete(k); // delete
                 _reactions_list_map.delete(t); // delete from weakmap
             }
             return rv;
         },
     });
 }
-/** create reaction for reactive
- *  @param { Function } a is reactive reaction
- *  a = function(detail) detail is Object = {a: "set" | "del"}
+
+/** Create reaction for reactive.
+ *  @param { ReactionType } a - Reaction function.
  */
 function createReaction(a) {
     _current_reaction = a;
     _current_reaction();
-    _current_reaction = undefined;
+    _current_reaction = null;
 }
 
 export { monitor, createReaction }

@@ -1,29 +1,62 @@
+// @ts-check
+/*!
+ * The notificator.js is part of Fake Reactivity Component oriented Libray
+ * Copyright (c) 2025 s3mat3
+ * Licensed under the MIT License, see the LICENSE file for details
+ */
 /**
- * @file notificator.js
+ * @file Another way to deliver events
  *
  * @copyright © 2025 s3mat3
  * This code is licensed under the MIT License, see the LICENSE file for details
- *
- * @brief
  *
  * @author s3mat3
  */
 'use strict';
 
-export class Notificator {
+/**
+ * Callback type for notificator
+ */
+class NotificatorCallbackType {
+    /** ctx - Execute context for callback.
+       @type { Object } */
+    #ctx;
+    /** cb - Callback
+       @type { Function }*/
+    #cb;
     /**
-     *  @type { Map<String, Set<Function> }
+     *  @param { Function } cb - Entry point of callback.
+     *  @param { Object }  [ctx = this] - Callback execution context.
      */
-    #listeners = null;
+    constructor(cb, ctx = this) {
+        this.#cb = (cb) ?? NotificatorCallbackType.voidFunc;
+        this.#ctx = ctx;
+    }
+
+    get ctx() {return this.#ctx;}
+    get cb() {return this.#cb;}
+
+    static voidFunc() {}
+}
+/**
+ * Notificator class
+ */
+export class Notificator {
+    /** listeners - Delivery list.
+     *  @type { Map<String, Set<NotificatorCallbackType>> }
+     */
+    #listeners;
+    /**
+     * @constructor
+     */
     constructor() {
         this.#listeners = new Map();
     }
-
     /**
      * Execute notify for listener all waiting
      *
-     *  @param { String } k is event name(type) for waiting listener
-     *  @param { Object } o is detail notify reason
+     *  @param { String } k - Event name(type) for waiting listener.
+     *  @param { Object } o - Detail notify reason.
      */
     notify(k, o = {}) {
         const listeners = this.#listeners.get(k);
@@ -37,9 +70,9 @@ export class Notificator {
     }
 
     /**
-     * Number of listener by key
-     *  @param { String } k is event name(or type) for waiting listener
-     *  @reterns { Number } listener's size on key
+     * Number of listener by event name
+     *  @param { String } k - Event name(or type) for waiting listener.
+     *  @reterns { Number } Size of listeners
      */
     size(k) {
         const listeners = this.#listeners.get(k);
@@ -47,35 +80,38 @@ export class Notificator {
     }
     /**
      * Add listener's callback
-     * ** CAUTION ** callback function can not entry anonymous function
      *
-     *  @param { String } k is event name(or type) for waiting listener
-     *  @param { Function } f is callback function as to recive event notice
-     *  @param { Object } c is context of execute default this
-     *  @reterns { Number } listener's size on key
-     *  @throws { TypeError } when listener is not a function
+     * > **Important:** Callback function can not entry anonymous function.
+     *
+     *  @param { String } k - Event name(or type) for waiting listener.
+     *  @param { Function } f - Callback function as to recive event notice.
+     *  @param { Object } [c = this] - Context of execute default this.
+     *  @reterns { Number } Listener's size by event name.
+     *  @throws { TypeError } When given listener is not a function.
      */
     addListener(k, f, c = this) {
-        if (typeof f !== "function") throw new TypeError("Not a function, nesseary listener is function", "notificator.js");
-        const obj = { ctx: c, cb: f };
-        if (!this.#listeners.has(k)) this.#listeners.set(k, new Set());
+        if (! this.#listeners) return;
+        if (typeof f !== "function") throw new TypeError("Not a function, nesseary listener is function [notificator.js]");
+        const obj = new NotificatorCallbackType(f, c);
+        if (! this.#listeners.has(k)) this.#listeners.set(k, new Set());
         let cb = false;
-        this.#listeners.get(k).forEach((o) => {
+        this.#listeners?.get(k)?.forEach((o) => {
             if (o.cb === f) cb = true;
         });
-        if (! cb) this.#listeners.get(k).add(obj);
-        return this.#listeners.get(k).size;
+        if (! cb) this.#listeners?.get(k)?.add(obj);
+        return this.#listeners.get(k)?.size || 0;
     }
     /**
      * Delete listener's callback
-     * ** CAUTION ** callback function can not entry anonymous function
      *
-     *  @param { String } k is event name(type) for waiting listener
-     *  @param { Function } f is callback function for listenr
-     *  @throws { TypeError } when listener is not a function
+     * > **Important:** Callback function can not entry anonymous function.
+     *
+     *  @param { String } k - Event name(type) for waiting listener.
+     *  @param { Function } f - Delete this function from listeners map.
+     *  @throws { TypeError } When listener is not a function.
      */
     delListener(k, f) {
-        if (typeof f !== "function") throw new TypeError("Not a function, nesseary listener is function", "notificator.js");
+        if (typeof f !== "function") throw new TypeError("Not a function, nesseary listener is function [notificator.js]");
         const listeners = this.#listeners.get(k);
         if (!listeners) return;
         listeners.forEach((obj) => {
@@ -87,10 +123,8 @@ export class Notificator {
 
     /**
      * Delete listener's callback by map key
-     * ** CAUTION ** callback function can not entry anonymous function
      *
-     *  @param { String } k is event name(type) for waiting listener
-     *  @throws { TypeError } when listener is not a function
+     *  @param { String } k - Event name(type) for waiting listener.
      */
     delListenerByKey(k) {
         const listeners = this.#listeners.get(k);

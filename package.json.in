@@ -28,7 +28,7 @@
         "preview": "vite preview",
         "test": "vitest run --printConsoleTrace=true",
         "dtest": "vitest watch --printConsoleTrace=true",
-        "docs": "jsdoc --configure ./jsdoc.json --verbose"
+        "docs": "jsdoc --private --configure ./jsdoc.json --verbose"
     },
     "devDependencies": {
         "jsdoc": "^4.0.4",

@@ -1,15 +1,19 @@
+// @ts-check
+/*!
+ * The hrequest.js is part of Fake Reactivity Component oriented Libray
+ * Copyright (c) 2025 s3mat3
+ * Licensed under the MIT License, see the LICENSE file for details
+ */
 /**
- * @file hrequest.js
+ * @file fetch api wraper and some utils
  *
  * @copyright © 2025 s3mat3
  * This code is licensed under the MIT License, see the LICENSE file for details
  *
- * @brief fetch api wraper and some utils
- *
  * @author s3mat3
  */
 "use strict";
-import * as fr from "./fr";
+import {emit} from "./fr";
 
 /**
  * Build URL string
@@ -40,7 +44,7 @@ function buildUrlWithQuery(fullPath, queries) {
  *  @returns {Object} headers key-value object
  */
 function buildHeaders(headers = {}) {
-    if (Object.hasOwn(headers, 'Content-Type')) {
+    if (headers.hasOwnProperty('Content-Type')) {
         return { ...headers };
     }
     return { 'Content-Type': 'application/json', ...headers };
@@ -50,7 +54,7 @@ function buildHeaders(headers = {}) {
  * Build API request options
  *  @param {String} method for http communication  'GET', 'POST', 'DELETE', 'PUT' ...etc,
  *  @param {Object} headers request headers
- *  @param {Any} body request body
+ *  @param {any} body request body
  *  @param {String} cors Select from the following three values 'cors' | 'no-cors' | 'same-origin' Default 'cors'
  *  @param {String} credential Select from the following three values 'omit' | 'same-origin' | 'include' Default 'same-origin'
  *  @returns {Object} options object for fetch api
@@ -71,16 +75,16 @@ function buildOptions(method = 'GET', headers, body, cors = 'cors', credential =
 
 /**
  * Request to API endpoint(entrypoint) wrapper for fetch api
- *  @param {String} url for request endpoint
- *  @param {Object} options for fetch api
- *  @param {Function} handle_header is call back using response header analysis
- *  @returns {Obj} when success
+ *  @param { String } url - Request endpoint.
+ *  @param { Object } options - Fetch api options.
+ *  @param { Function | null } header_handler - call back using response header analysis
+ *  @returns { Promise<Object> } when success
  *  @throws when occurrered client side error
  *  @throws When response JSON can't parse
  *  @throws When response not a text
  */
 async function request(url, options, header_handler = null) {
-    fr.emit("fr:request-start", {}, document);
+    emit("fr:hrequest-start", {}, document);
     try {
         const response = await fetch(url, options);
 
@@ -112,7 +116,7 @@ async function request(url, options, header_handler = null) {
         console.error('Request failed:', err);
         throw err;
     } finally {
-        fr.emit("fr:request-done", {}, document);
+        emit("fr:hrequest-done", {}, document);
     }
 }
 

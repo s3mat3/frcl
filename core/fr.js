@@ -152,11 +152,14 @@ function emit(n, d, c = document) {
     }
     return c.dispatchEvent(new CustomEvent(n, options));
 }
+/** @typedef { keyof HTMLElementEventMap } EventType */
+/** @typedef { (this:HTMLElement, ev:Event) => any } EventHandlerType */
+
 /**
  * Remove and add event listener
  *  @param { HTMLElement } s - event souce (context)
- *  @param { keyof HTMLElementEventMap } e - event name
- *  @param { (this: HTMLElement,ev: Event) => any } l - function of event listener
+ *  @param { EventType } e - Event type (name).
+ *  @param { EventHandlerType } l - function of event listener
  */
 function setEvent(s, e, l) {
     s.removeEventListener(e, l);
@@ -164,19 +167,20 @@ function setEvent(s, e, l) {
 }
 /**
  * @typedef { Object } EventHandlerPair
- * @property { keyof HTMLElementEventMap } [en] - Event name
- * @property { (this: HTMLElement,ev: Event) => any } [eh] - Event handler entry point
+ * @property { EventType } [en] - Event name
+ * @property { EventHandlerType } [eh] - Event handler entry point
  */
 /**
  * @typedef { Array<EventHandlerPair> } EventHandlers
  */
 /**
  * Create EventHandlerPair and  push to EventHandlers.
- *  @param { EventHandlers } [hs] - handler pair list.
- *  @param { keyof HTMLElementEventMap } [en] - Event name.
- *  @param { (this: HTMLElement,ev: Event) => any } [eh] - Event handler.
+ *  @param { EventHandlers } [hs] - Handler pair list.
+ *  @param { EventType } [en] - Event name.
+ *  @param { EventHandlerType } [eh] - Event handler.
  */
-function pushEventHandlers(hs = [], en, eh) {
+function pushEventHandlers(hs = [], en = "click", eh = $nop) {
+    if (! en || ! eh || typeof eh !== "function") return;
     hs.push({en, eh});
 }
 /**
@@ -205,14 +209,17 @@ function removeEvents(ctx, ehs) {
 }
 /**
  * @typedef { Object } CurrentRegistering
- * @property { Object } [ctx] - Context (Nel)
- * @property { Function } [cb] - Call back for reaction
+ * @property { ?Object } [ctx] - Context (Nel)
+ * @property { ?Function } [cb] - Call back for reaction
  */
-/** @type { CurrentRegistering } @private in this file only */
+/**
+ *  @package
+ *  @type { CurrentRegistering }
+ */
 let _current_registering = {};
 ////////////////////////////////////////////////////////////////////
-/**
- * @interface NodeElement
+/** NodeElement
+ * @interface
  */
 class NodeElement {
     /** Build node element
@@ -347,17 +354,17 @@ const _invoke = (fl) => {
         f();
     });
 }
-/**
- * @abstract NodeParts
+/** NodeParts
+ *  @abstract
  */
 class NodeParts {
-    /** @type { FunctionList } beforeMount */
+    /** @type { FunctionList } */
     beforeMount = [];
-    /** @type { FunctionList } mounted */
+    /** @type { FunctionList } */
     mounted = [];
-    /** @type { FunctionList } beforeUnmount */
+    /** @type { FunctionList } */
     beforeUnmount = [];
-    /** @type { FunctionList } unmounted */
+    /** @type { FunctionList } */
     unmounted = [];
     /** @type { NodeElement } */
     _node;
@@ -394,40 +401,71 @@ class Nel extends NodeElement{
      * @type { String }
      */
     #nid = "";
-    /** @protected
-     * This node cache
-     * @type { Element }
+    /** This node element cache.
+     *  @protected
+     *  @type { Element }
      */
     _elm;
-    /** @public
-     * Node type.
+    /** Node type.
+     * @public
      * @type { NType }
      */
     ntype = NType.tagname;
-    /** @public
-     * Tag name.
-     * @type { String | Element }
+    /** Tag name.
+     *  @public
+     *  @type { String | Element }
      */
     name = ""
-    /** @public @type { Attrs } */
+    /** Element's attribute.
+     *  @public
+     *  @type { Attrs }
+     */
     attrs = { id: "" };
-    /** @public @type { Array <Nel | Element | String | RefKey> } */
+    /** Children of this node element.
+     *  @public
+     *  @type { Array <Nel | Element | String | RefKey> }
+     */
     children = [];
-    /** @public @type { Element | null } */
+    /** Parent of this node element (mount point).
+     *  @public
+     *  @type { Element | null }
+     */
     p = null;
-    /** @public @type { FunctionList } functions object for befor create */
+    // for life cycle hooks
+    /**
+     *  @public
+     *  @type { FunctionList }
+     */
     beforeCreate = [];
-    /** @public @type { FunctionList } functions object for created */
+    /**
+     *  @public
+     *  @type { FunctionList }
+     */
     created = [];
-    /** @public @type { FunctionList } functions object for befor mount */
+    /**
+     *  @public
+     *  @type { FunctionList }
+     */
     beforeMount = [];
-    /** @public @type { FunctionList } functions object for mounted */
+    /**
+     * @public
+     * @type { FunctionList }
+     */
     mounted = [];
-    /** @public @type { FunctionList } functions object for befor unmount */
+    /**
+     *  @public
+     *  @type { FunctionList }
+     */
     beforeUnmount = [];
-    /** @public @type { FunctionList } functions object for unmounted */
+    /**
+     *  @public
+     *  @type { FunctionList }
+     */
     unmounted = [];
-    /** @public @type { EventHandlers } [handlers = []] - EventHandlerPair list */
+    /** EventHandlerPair list.
+     * @public
+     * @type { EventHandlers }
+     */
     handlers = [];
     /**
      * @constructor
