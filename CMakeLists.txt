@@ -72,6 +72,14 @@ add_custom_target(unit
 #
 ##
 #
+add_custom_target(core_doc
+  COMMAND npm run docs
+  WORKING_DIRECTORY ${FRCL_ROOT_DIRECTORY}
+  COMMENT "Building core doc in ${FRCL_BUILD_DIRECTORY}/docs"
+)
+#
+##
+#
 add_test(
   NAME core_test
   COMMAND npm run test
