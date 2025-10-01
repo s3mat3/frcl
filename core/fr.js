@@ -15,45 +15,60 @@
 "use strict";
 
 import {extractTypeName, isMatchType, isEmptyObj, isElement,} from "./misc";
-
+/**
+ * Serial number generator
+ */
 class SerialID {
+    /** Setup to readonly by object proxy.
+     *  @type { Object }
+     */
     #value = {};
+    /**
+     * @constructor
+     *  @param { Number } [i = 1000] - Serail number base (in unsigned integer)
+     */
     constructor(i = 1000) {
         this.#value = new Proxy({ count: i }, {
             set(t, k, v, r) {
                 Reflect.set(t, k, v, r); // dummy
                 return false; // readonly
             },
-            get(t, k) {
+            get(t, k) { // when read value.count increment
                 return String(t[k]++);
             }
         });
     }
     get value() { return this.#value.count; }
 }
+/**
+ *  @package
+ *  @type { SerialID }
+ */
 const _FR_CID = new SerialID(1000);
 ////////////////////////////////////////////////////////////////////
 // globals
 ////////////////////////////////////////////////////////////////////
-/**
- * window.$fr_cid (read only)
- * This global is readed per increment number as string
- */
 Object.defineProperty(globalThis, "$fr_cid", {
     get() {
         return _FR_CID.value;
     },
     // no setter
 });
-
-globalThis.$nop = () => {};
-globalThis.$d = window.document;
 /**
+ * No operation.
+ * @function
+ */
+globalThis.$nop = () => {};
+/**
+ * Shorthands.
+ */
+globalThis.$d = window.document;
+/** Shorthands.
  *  @param { String } s - Selector name.
  *  @returns { Element | Null }
  */
 globalThis.$$ = (s) => document.querySelector(s);
-/**
+/** Shorthands.
  *  @param { String } ss - Selector name.
  *  @returns { NodeList | Null }
  */
@@ -113,8 +128,9 @@ function buildElement(h = "<div></div>") {
 }
 
 /**
- * @template T
- * @typedef {(string | ((props: T) => string))[]} Interpolation
+ * template T
+ * typedef {(string | ((props: T) => string))[]} Interpolation
+ * typedef {(string | ((props: T) => string))[]} Interpolation
  */
 
 /**
@@ -152,17 +168,26 @@ function emit(n, d, c = document) {
     }
     return c.dispatchEvent(new CustomEvent(n, options));
 }
-/** @typedef { keyof HTMLElementEventMap } EventType */
-/** @typedef { (this:HTMLElement, ev:Event) => any } EventHandlerType */
+/** @typedef { string } EventType */
+/**
+ *  @typedef { function(HTMLElement, Event, (?Boolean | ?Object)): any } EventHandlerType
+ *  @param { HTMLElement } ctx - Event source.
+ *  @param { Event } ev - Occurred event.
+ *  @param { ?Boolean | ?Object } [opts = undefined] - Occurred event.
+ *  @returns { any }
+ */
 
 /**
  * Remove and add event listener
  *  @param { HTMLElement } s - event souce (context)
  *  @param { EventType } e - Event type (name).
  *  @param { EventHandlerType } l - function of event listener
+ *  > **IMPORTANT:** EventHandlerType does not allow anonymous functions.
  */
 function setEvent(s, e, l) {
+    //@ts-ignore
     s.removeEventListener(e, l);
+    //@ts-ignore
     s.addEventListener(e, l);
 }
 /**
@@ -178,6 +203,7 @@ function setEvent(s, e, l) {
  *  @param { EventHandlers } [hs] - Handler pair list.
  *  @param { EventType } [en] - Event name.
  *  @param { EventHandlerType } [eh] - Event handler.
+ *  > **IMPORTANT:** EventHandlerType does not allow anonymous functions.
  */
 function pushEventHandlers(hs = [], en = "click", eh = $nop) {
     if (! en || ! eh || typeof eh !== "function") return;
@@ -187,11 +213,13 @@ function pushEventHandlers(hs = [], en = "click", eh = $nop) {
  * Add to EventListener by EventHandlers
  *  @param { Element } [ctx] - Event source context.
  *  @param { EventHandlers } [ehs] - add list.
+ *  > **IMPORTANT:** EventHandlerType does not allow anonymous functions.
  */
 function addEvents(ctx, ehs) {
     if (!ctx || !ehs || !Array.isArray(ehs) || ehs.length === 0) return;
     for (const p of ehs) {
         if (typeof p.en !== "string" || typeof p.eh !== "function") continue;
+        //@ts-ignore
         ctx.addEventListener(p.en, p.eh);
     }
 }
@@ -199,11 +227,13 @@ function addEvents(ctx, ehs) {
  * Remove form EventListener by EventHandlers
  *  @param { Element } [ctx] - Event source context.
  *  @param { EventHandlers } [ehs] - remove list
+ *  > **IMPORTANT:** EventHandlerType does not allow anonymous functions.
  */
 function removeEvents(ctx, ehs) {
     if (!ctx || !ehs || !Array.isArray(ehs) || ehs.length === 0) return;
     for (const p of ehs) {
         if (typeof p.en !== "string" || typeof p.eh !== "function") continue;
+        //@ts-ignore
         ctx.removeEventListener(p.en, p.eh);
     }
 }
@@ -423,7 +453,7 @@ class Nel extends NodeElement{
     attrs = { id: "" };
     /** Children of this node element.
      *  @public
-     *  @type { Array <Nel | Element | String | RefKey> }
+     *  @type { Array<Nel | Element | String | RefKey> }
      */
     children = [];
     /** Parent of this node element (mount point).

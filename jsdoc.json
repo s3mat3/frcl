@@ -1,11 +1,19 @@
 {
-    "plugins": ["plugins/markdown"],
+    "plugins": ["plugins/markdown", "plugins/summarize"],
     "source": {
         "include": ["./core"],
         "includePattern":".+\\.js(doc|x)?$"
     },
     "opts":{
-        "destination": "./build/docs"
+        "destination": "./build/docs",
+        "template": "node_modules/docdash",
+        "encoding": "utf8",
+        "recurse": true,
+        "verbose": true
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
     },
     "markdown": {
         "excludeTags":["author"]

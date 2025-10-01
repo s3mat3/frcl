@@ -33,7 +33,7 @@ class ReactionArg {
 
 /**
  * ReactionType is callback function.
- * @typedef { function(ReactionArg | void): void } ReactionType;
+ * @typedef { function((ReactionArg | void)): void } ReactionType;
  */
 
 /** Listeners map
