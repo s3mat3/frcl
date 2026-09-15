@@ -1,3 +1,7 @@
+Version 0.105.5:
+ - fix(security): Update package-lock.json
+ - fix(dep): version up postcss
+
 Version 0.105.4:
  - fix(node_module): Upgrade vite version
 
