@@ -1,3 +1,6 @@
+Version 0.105.8:
+ - fix(security): Update markdown-it and other
+
 v0.105.7
 - fix(security): Update markdown-it
 
